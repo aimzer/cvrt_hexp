@@ -1,0 +1,217 @@
+<!doctype html>
+<!--
+The consent.html displays the text of an IRB-approved consent form.
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Behavioral Experiment - Informed Consent Form</title>
+  <link rel="stylesheet" href="/static/css/tacit-css.min.css"/>
+</head>
+<body>
+
+  <!-- Study headers -->
+  <h1>CONSENT FORM</h1>
+
+  <!-- <hr>
+  <p>
+    <b>TITLE OF RESEARCH:</b> Behavioral Studies of Learning and Decision-making
+    <br>
+    <b>PRINCIPAL INVESTIGATOR</b>: Yael Niv, Ph.D.
+    <br>
+    <b>PRINCIPAL INVESTIGATOR’S DEPARTMENT</b>: Psychology and the Princeton Neuroscience Institute
+  </p>
+  <hr> -->
+
+    <p>
+        Towards An Artificial Visual System
+        Version 1, 12/8/2020
+    </p>
+    <p>
+        RESEARCHER: Dr. Thomas Serre
+    </p>
+    <ul>
+        <li>
+            <b>OBJECTIVE</b>: This study focuses on human performance in predicting the decisions of a black-box
+            system in tasks involving explanations of the system. This experiment will be performed by Amazon MTurk.
+            In this experiment, we seek to gain an understanding of the effect of explanations on how a human
+            apprehends a black-box system. We ask you to participate in this study as your performance in the task
+            will provide useful data for this
+            understanding.
+        </li>
+        <li>
+            <b>PROCEDURES</b>: You will first be asked to visualize images and prediction of an Artificial Intelligence (AI),
+            for example a cat image with the prediction cat means that the AI thinks that there is a cat in this
+            image. Some users will also have an explanation of the AI's decision associated with each image. This
+            explanation will take
+            the form of a heatmap, describing the areas of the image important for the decision. You
+            will try to understand the logic behind the AI's decisions in order to predict on other images the
+            predictions of the AI.
+        </li>
+        <li>
+            <b>TIME INVOLVED</b>: You can participate in the experiment at your own pace, but typically the session
+            should last about five to ten minutes.
+        </li>
+        <li>
+            <b>COMPENSATION</b>: You will receive $1.4 compensation for your time. You will be placed in one of 3
+            conditions to try to understand the behavior of an AI.
+            Different conditions have different level of difficulty, don’t worry if you feel like the task is hard,
+            just try your best!
+        </li>
+        <li>
+            <b>RISKS</b>: There are no anticipated risks for the participants in the current study, though you are
+            free to stop participating at any time.
+        </li>
+        <li>
+            <b>BENEFITS</b>: There are no direct benefits for participating in this study. However, data from this
+            study may improve our knowledge of how the brain processes current explanations for deep neural
+            network. The researchers intend to use data from this study for research projects that may appear in
+            scientific conferences and journals.
+        </li>
+        <li>
+            <b>CONFIDENTIALITY</b>: The data collected from your participation will be anonymous and confidential.
+            By signing this document, you permit us to use anonymized information for scientific purposes including
+            teaching and/or publication. Important information about your MTurk ID: Your MTurk ID does not directly
+            identify you, but it can be linked to your public profile page. You may want to restrict what
+            information you share on this public profile. We will not share your MTurk ID with anyone outside of our
+            research team. If you ever contact us, Amazon.com will automatically insert your email address into the
+            message, so that we can reply to you. We will use your name and email only to respond to your
+            communication and will never distribute it to anyone outside of our research team. For more information
+            about the privacy and confidentiality limitations associated with using MTurk, please refer to Amazon’s
+            MTurk Privacy Notice and contact them for more information: https://www.mturk.com/mturk/privacynotice
+            and https://www.mturk.com/mturk/contact.
+        </li>
+        <li>
+            <b>CONTACT INFORMATION</b>: If you have questions or concerns about this research, please contact
+            serre-psychophysics@brown.edu.
+        </li>
+        <li>
+            <b>YOUR RIGHTS</b>: If you have questions about your rights as a research participant, you can contact
+            Brown University’s Human Research Protection Program at 401-863-3050 or email them at IRB@Brown.edu
+        </li>
+        <li>
+            <b>CONSENT TO PARTICIPATE</b>: Clicking the link below confirms that you have read and understood the
+            information in this document, are 18 or older, and that you agree to volunteer as a research participant
+            for this study.
+        </li>
+    </ul>
+
+
+  <center>
+    <form method="post">
+
+      <button type="submit" name="subj_consent" value=1>I accept</button>
+      <button type="submit" name="subj_consent" value=0>No thank you</button>
+
+    </form>
+  </center>
+
+</body>
+<style>
+.recontact {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  width: 0;
+  z-index: -1;
+}
+</style>
+</html>
+
+
+<!-- 
+
+
+<article class="card color--white">
+  <div class="card__image">
+      <img src="/images/consent.svg" alt="Fill out document" class="card__img" style="max-width: 600px">
+  </div>
+
+  <h3 class="card__title" style="text-align: center; font-weight: bold">BROWN UNIVERSITY </h3>
+  <h4 style="text-align: center">CONSENT FOR RESEARCH PARTICIPATION</h4>
+
+
+  <div class="card__content">
+      <p>
+          Towards An Artificial Visual System
+          Version 1, 12/8/2020
+      </p>
+      <p>
+          RESEARCHER: Dr. Thomas Serre
+      </p>
+      <ul>
+          <li>
+              <b>OBJECTIVE</b>: This study focuses on human performance in predicting the decisions of a black-box
+              system in tasks involving explanations of the system. This experiment will be performed by Amazon MTurk.
+              In this experiment, we seek to gain an understanding of the effect of explanations on how a human
+              apprehends a black-box system. We ask you to participate in this study as your performance in the task
+              will provide useful data for this
+              understanding.
+          </li>
+          <li>
+              <b>PROCEDURES</b>: You will first be asked to visualize images and prediction of an Artificial Intelligence (AI),
+              for example a cat image with the prediction cat means that the AI thinks that there is a cat in this
+              image. Some users will also have an explanation of the AI's decision associated with each image. This
+              explanation will take
+              the form of a heatmap, describing the areas of the image important for the decision. You
+              will try to understand the logic behind the AI's decisions in order to predict on other images the
+              predictions of the AI.
+          </li>
+          <li>
+              <b>TIME INVOLVED</b>: You can participate in the experiment at your own pace, but typically the session
+              should last about five to ten minutes.
+          </li>
+          <li>
+              <b>COMPENSATION</b>: You will receive $1.4 compensation for your time. You will be placed in one of 3
+              conditions to try to understand the behavior of an AI.
+              Different conditions have different level of difficulty, don’t worry if you feel like the task is hard,
+              just try your best!
+          </li>
+          <li>
+              <b>RISKS</b>: There are no anticipated risks for the participants in the current study, though you are
+              free to stop participating at any time.
+          </li>
+          <li>
+              <b>BENEFITS</b>: There are no direct benefits for participating in this study. However, data from this
+              study may improve our knowledge of how the brain processes current explanations for deep neural
+              network. The researchers intend to use data from this study for research projects that may appear in
+              scientific conferences and journals.
+          </li>
+          <li>
+              <b>CONFIDENTIALITY</b>: The data collected from your participation will be anonymous and confidential.
+              By signing this document, you permit us to use anonymized information for scientific purposes including
+              teaching and/or publication. Important information about your MTurk ID: Your MTurk ID does not directly
+              identify you, but it can be linked to your public profile page. You may want to restrict what
+              information you share on this public profile. We will not share your MTurk ID with anyone outside of our
+              research team. If you ever contact us, Amazon.com will automatically insert your email address into the
+              message, so that we can reply to you. We will use your name and email only to respond to your
+              communication and will never distribute it to anyone outside of our research team. For more information
+              about the privacy and confidentiality limitations associated with using MTurk, please refer to Amazon’s
+              MTurk Privacy Notice and contact them for more information: https://www.mturk.com/mturk/privacynotice
+              and https://www.mturk.com/mturk/contact.
+          </li>
+          <li>
+              <b>CONTACT INFORMATION</b>: If you have questions or concerns about this research, please contact
+              serre-psychophysics@brown.edu.
+          </li>
+          <li>
+              <b>YOUR RIGHTS</b>: If you have questions about your rights as a research participant, you can contact
+              Brown University’s Human Research Protection Program at 401-863-3050 or email them at IRB@Brown.edu
+          </li>
+          <li>
+              <b>CONSENT TO PARTICIPATE</b>: Clicking the link below confirms that you have read and understood the
+              information in this document, are 18 or older, and that you agree to volunteer as a research participant
+              for this study.
+          </li>
+      </ul>
+
+  </div>
+
+  <div class="card__actions">
+      <a href="/consent/agree" class="button color--indigo text--white ripple">Agree</a>
+      <a href="/exit" class="button color--white text--black ripple">No thanks, I do not want to do this HIT</a>
+  </div>
+</article> -->

@@ -1,0 +1,24 @@
+.jspsych-image-click-button:hover{
+    transform: scale(1.2);
+    cursor:pointer;
+}
+
+.correct-choice {
+    border: 5px solid green;
+}
+
+.wrong-choice {
+    border: 5px solid red;
+}
+
+.jspsych-image-click-button{
+    position: absolute;
+    width: 35%;
+    height: 35%;
+}
+
+.jspsych-image{
+    position: absolute;
+    width: 35%;
+    height: 35%;
+}
