@@ -226,12 +226,12 @@ def elementary_to_comp(comp_to_elem):
         2:  [],
         3:  [],
         4:  [],
-        # 5:  [],
+        5:  [],
         6:  [],
         7:  [],
         8:  [],
         9:  [],
-        10: [],
+        # 10: [],
     }
     for k,v in COMP_TO_ELEM.items():
         for v_ in v:
@@ -412,6 +412,47 @@ N_CONDITIONS = len(trial_combinations) * len(trial_sequence)
 #     27: {'train': [7, 8],  'test_ab': [79]},
 # }
 
+
+combinations = {
+    0:  {'train': [0, 1],  'test_ab': [49, 50]},
+    1:  {'train': [0, 2],  'test_ab': [56, 57]},
+    2:  {'train': [0, 3],  'test_ab': [63, 64, 65]},
+    3:  {'train': [0, 4],  'test_ab': [83]},
+    4:  {'train': [0, 5],  'test_ab': [95]},
+    5:  {'train': [0, 6],  'test_ab': [68, 69]},
+    6:  {'train': [0, 7],  'test_ab': [66, 67, 99]},
+    7:  {'train': [0, 8],  'test_ab': [20, 44, 45]},
+    8:  {'train': [1, 2],  'test_ab': [47, 48]},
+    9:  {'train': [1, 3],  'test_ab': [53, 54]},
+    10: {'train': [1, 4],  'test_ab': [51, 52]},
+    11: {'train': [1, 5],  'test_ab': [51, 52]},
+    12: {'train': [1, 6],  'test_ab': [13, 14, 16, 32]},
+    13: {'train': [1, 7],  'test_ab': [24, 25, 26, 27]},
+    14: {'train': [1, 8],  'test_ab': [55]},
+    15: {'train': [2, 3],  'test_ab': [82, 83]},
+    16: {'train': [2, 4],  'test_ab': [58]},
+    17: {'train': [2, 5],  'test_ab': [97]},
+    18: {'train': [2, 6],  'test_ab': [61, 62]},
+    19: {'train': [2, 7],  'test_ab': [59]},
+    20: {'train': [2, 8],  'test_ab': [60]},
+    21: {'train': [3, 4],  'test_ab': [70]},
+    22: {'train': [3, 5],  'test_ab': [94]},
+    23: {'train': [3, 6],  'test_ab': [77, 78]},
+    24: {'train': [3, 7],  'test_ab': [74, 75]},
+    25: {'train': [3, 8],  'test_ab': [76]},
+    26: {'train': [4, 5],  'test_ab': [96]},
+    27: {'train': [4, 6],  'test_ab': [73]},
+    28: {'train': [4, 7],  'test_ab': [71, 72]},
+    29: {'train': [4, 8],  'test_ab': [88, 89]},
+    30: {'train': [5, 6],  'test_ab': [91]},
+    31: {'train': [5, 7],  'test_ab': [92, 93]},
+    32: {'train': [5, 8],  'test_ab': [101, 102]},
+    33: {'train': [6, 7],  'test_ab': [17]},
+    34: {'train': [6, 8],  'test_ab': [80, 81]},
+    35: {'train': [7, 8],  'test_ab': [79]},
+}
+#     17: {'train': [2, 9],  'test_ab': [39]},
+#     18: {'train': [2, 10], 'test_ab': [38]},
 
 
 
