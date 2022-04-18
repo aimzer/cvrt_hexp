@@ -17,14 +17,14 @@ build/
 .DS_Store
 
 # project specific
-data
-metadata
-reject
-exp_db
+services/web/data
+services/web/metadata
+services/web/reject
+services/web/exp_db
 
-data_p
-metadata_p
-reject_p
-exp_db_p
+services/web/data_p
+services/web/metadata_p
+services/web/reject_p
+services/web/exp_db_p
 
-app/static/human_exp_images
+services/web/app/static/human_exp_images
