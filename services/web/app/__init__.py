@@ -46,7 +46,7 @@ if secret_key == "PLEASE_CHANGE_THIS":
 ## Initialize Flask application.
 app = Flask(__name__)
 
-app.config.from_object("app.config.Config")
+# app.config.from_object("app.config.Config")
 
 
 app.secret_key = secret_key

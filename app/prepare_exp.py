@@ -1,8 +1,6 @@
 import numpy as np
 import os
 
-# from app.prepare_exp import TASKS_NAMES
-
 TASKS_NAMES={
     ### elementary
     0: "task_shape",
@@ -88,30 +86,33 @@ TASKS_NAMES={
     79: "task_inside_contact",
     80: "task_contact_count_1",
     81: "task_contact_count_2",
-    ##### new
-    82: "task_size_color_1",
-    83: "task_size_color_2",
-    84: "task_color_sym_1",
-    85: "task_color_sym_2",
-    86: "task_shape_rot_1",
-    87: "task_shape_contact_2",
-    88: "task_rot_contact_1",
-    89: "task_rot_contact_2",
-    90: "task_inside_sym_mir",
-    91: "task_flip_count_1",
-    92: "task_flip_inside_1",
-    93: "task_flip_inside_2",
-    94: "task_flip_color_1",
-    95: "task_shape_flip_1",
-    96: "task_rot_flip_1",
-    97: "task_size_flip_1",
-    98: "task_pos_rot_3",
-    99: "task_pos_flip_1",
-    100: "task_pos_flip_2",
-    101: "task_flip_contact_1",
-    102: "task_flip_contact_2",    
+    82: "",
+    83: "",
+    84: "",
+    85: "",
+    86: "",
+    87: "",
+    88: "",
+    101: "task_shape_color",
+    103: "task_shape_color_2",
+    104: "task_shape_color_3",
+    106: "task_shape_inside",
+    107: "task_shape_inside_1",
+    108: "task_shape_count_1",
+    112: "task_shape_count_2",
+    113: "task_rot_color",
+    115: "task_rot_inside_1",
+    116: "task_rot_inside_2",
+    117: "task_rot_count_1",
+    118: "task_color_inside_1",
+    119: "task_color_inside_2",
+    121: "task_color_contact",
+    122: "task_color_count_1",
+    123: "task_color_count_2",
+    124: "task_inside_contact",
+    125: "task_contact_count_1",
+    126: "task_contact_count_2",
 }
-
 
 
 COMP_TO_ELEM = {
@@ -197,7 +198,7 @@ COMP_TO_ELEM = {
     88: [4,8],
     # 89: [4,8],
     # 90: [7,10],
-    91: [5,6],
+    # 91: [5,6],
     92: [5,7],
     # 93: [5,7],
     94: [3,5],
@@ -269,16 +270,13 @@ ELEM_TO_COMP = elementary_to_comp(COMP_TO_ELEM)
 unique_conditions = [v for _,v in COMP_TO_ELEM.items()]
 
 trials = []
-n_elem_r = 9
+n_elem_r = 10
 from itertools import combinations
 arrs = [np.delete(np.arange(n_elem_r), i).tolist() for i in range(n_elem_r)]
 sign = [-1,1]
 # keep 0, choose from arrs[a][arrs[a].index(b) + sign[a%2]]
 # [0, 1], sorted([a, arrs[a][arrs[a].index(b) + sign[a%2]]]), sorted([b, arrs[b][arrs[b].index(a) + sign[b%2]]])
 combs = [list(c) for c in combinations(np.arange(n_elem_r),2)]
-# for c in combs:
-#     print(c)
-
 trials = [
     [c, 
     sorted([c[0], arrs[c[0]][(arrs[c[0]].index(c[1]) + sign[c[0]%2])%(n_elem_r-1)]]), 
@@ -292,48 +290,7 @@ for i in range(len(trials)):
     # candidates = [c for c in combs if c[0] not in trials[i][0]+trials[i][1]+trials[i][2] and c[1] not in trials[i][0]+trials[i][1]+trials[i][2]]
     trials[i].append(efs[i])
 
-
-trials = [
-    [[0, 1], [0, 8], [1, 2], [3, 4], [3, 4, 5, 6, 7]], 
-    [[0, 2], [0, 1], [2, 8], [5, 6], [3, 4, 5, 6, 7]], 
-    [[0, 3], [0, 2], [1, 3], [5, 7], [4, 5, 6, 7, 8]], 
-    [[0, 4], [0, 3], [4, 8], [1, 5], [1, 2, 5, 6, 7]], 
-    [[0, 5], [0, 4], [1, 5], [7, 8], [2, 3, 6, 7, 8]], 
-    [[0, 6], [0, 5], [6, 8], [4, 7], [1, 2, 3, 4, 7]], 
-    [[0, 7], [0, 6], [1, 7], [2, 3], [2, 3, 4, 5, 8]], 
-    [[0, 8], [0, 7], [2, 8], [1, 6], [1, 3, 4, 5, 6]], 
-    [[1, 2], [0, 1], [2, 5], [3, 7], [3, 4, 6, 7, 8]], 
-    [[1, 3], [1, 4], [2, 3], [6, 7], [0, 5, 6, 7, 8]], 
-    [[1, 4], [1, 5], [0, 4], [3, 8], [2, 3, 6, 7, 8]], 
-    [[1, 5], [1, 6], [0, 5], [4, 8], [2, 3, 4, 7, 8]], 
-    [[1, 6], [1, 7], [0, 6], [4, 5], [2, 3, 4, 5, 8]], 
-    [[1, 7], [1, 8], [2, 7], [0, 3], [0, 3, 4, 5, 6]],  
-    [[1, 8], [1, 2], [0, 8], [4, 6], [3, 4, 5, 6, 7]], 
-    [[2, 3], [0, 2], [3, 4], [1, 7], [1, 5, 6, 7, 8]], 
-    [[2, 4], [2, 3], [1, 4], [0, 6], [0, 5, 6, 7, 8]],  
-    [[2, 5], [2, 4], [3, 5], [0, 1], [0, 1, 6, 7, 8]], 
-    [[2, 6], [2, 5], [1, 6], [0, 4], [0, 3, 4, 7, 8]], 
-    [[2, 7], [2, 6], [3, 7], [0, 5], [0, 1, 4, 5, 8]], 
-    [[2, 8], [2, 7], [1, 8], [3, 6], [0, 3, 4, 5, 6]], 
-    [[3, 4], [3, 5], [2, 4], [6, 8], [0, 1, 6, 7, 8]], 
-    [[3, 5], [1, 3], [4, 5], [0, 7], [0, 2, 6, 7, 8]], 
-    [[3, 6], [3, 7], [2, 6], [0, 8], [0, 1, 4, 5, 8]], 
-    [[3, 7], [0, 3], [4, 7], [5, 8], [1, 2, 5, 6, 8]], 
-    [[3, 8], [3, 4], [7, 8], [2, 5], [0, 1, 2, 5, 6]],  
-    [[4, 5], [4, 8], [5, 6], [2, 7], [0, 1, 2, 3, 7]], 
-    [[4, 6], [4, 5], [3, 6], [2, 8], [0, 1, 2, 7, 8]], 
-    [[4, 7], [4, 6], [5, 7], [1, 8], [0, 1, 2, 3, 8]], 
-    [[4, 8], [4, 7], [3, 8], [2, 6], [0, 1, 2, 5, 6]], 
-    [[5, 6], [5, 7], [4, 6], [1, 3], [0, 1, 2, 3, 8]], 
-    [[5, 7], [5, 8], [6, 7], [1, 4], [0, 1, 2, 3, 4]], 
-    [[5, 8], [5, 6], [3, 8], [2, 4], [0, 1, 2, 4, 7]], 
-    [[6, 7], [3, 6], [7, 8], [1, 2], [0, 1, 2, 4, 5]], 
-    [[6, 8], [6, 7], [5, 8], [0, 2], [0, 1, 2, 3, 4]], 
-    [[7, 8], [0, 7], [6, 8], [3, 5], [1, 2, 3, 4, 5]],
-]
-
-# for t in trials:
-#     print(sorted(np.unique(t[0]+t[1]+t[2]).tolist()) )
+print(trials)
 ##### -> retrieve task numbers from [a,b]
 
 ## temporary
@@ -407,7 +364,7 @@ trial_sequence =[
 ]
 
 
-# print(len(trial_combinations))
+print(len(trial_combinations))
 
 def prepare_experiment(p_idx):
 
