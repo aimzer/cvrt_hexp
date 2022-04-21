@@ -92,10 +92,10 @@ var timeline = [
 // var all_tasks = [{task_idx: 0}, {task_idx: 1}, {task_idx: 2}] 
 // var tasks = {{ geocode|tojson }};
 
-function load_task(baseFolder, task){
+function load_task(baseFolder, task, n_trials_){
     var all_images = [];
-    var preload_images = [];
-    for (let i = 0; i < n_trials; i++) {
+    // var preload_images = [];
+    for (let i = 0; i < n_trials_; i++) {
         var taskFolder = baseFolder + task + '/'
         
         all_images.push([
@@ -108,56 +108,93 @@ function load_task(baseFolder, task){
     return all_images
 }
 
+
 var all_preload_images = []
 var all_tasks_images = []
+
+var practice_images = load_task(baseFolder, 'practice_img', 3)
+var preload_images = [].concat.apply([], practice_images)
+// all_preload_images.push(preload_images)
+var preload_practice = preload_images
+
 for (let i = 0; i < n_tasks; i++) {
-    var images = load_task(baseFolder, tasks[i])
+    var images = load_task(baseFolder, tasks[i], n_trials)
     var preload_images = [].concat.apply([], images)
     all_tasks_images.push(images)
     all_preload_images.push(preload_images)
 }
 
-var preload_images = [].concat.apply([], all_preload_images)
+
+// var preload_images = [].concat.apply([], all_preload_images)
 
 /* define trial stimuli array for timeline variables */
 
 var labelArray = [0,1,2,3];
-var responses = ['h', 'j', 'b', 'n']
+
+var practice_stimuli = [];
+for (let i = 0; i < 3; i++) {
+
+    var shuffledArray = jsPsych.randomization.shuffleNoRepeats(labelArray);
+    var images = []
+    for (let j = 0; j < 4; j++){
+        if(shuffledArray[j] == 3){var indexCorrect=j;}
+        images.push(practice_images[i][shuffledArray[j]])
+    }
+    practice_stimuli.push({
+        // stimulus: all_images[i],
+        stimulus: images,
+        correct_response: indexCorrect,
+        shuffled_array: shuffledArray,
+        catch_trial: false,
+    })
+}
 
 var all_test_stimuli = []
 
 for (let k = 0; k < n_tasks; k++) {
 
+    var catch_trial_index = Math.floor(Math.random() * 10) + 5;
     var test_stimuli = [];
     for (let i = 0; i < n_trials; i++) {
-
+        
         var shuffledArray = jsPsych.randomization.shuffleNoRepeats(labelArray);
         var images = []
         for (let j = 0; j < 4; j++){
             if(shuffledArray[j] == 3){var indexCorrect=j;}
             images.push(all_tasks_images[k][i][shuffledArray[j]])
         }
+
         test_stimuli.push({
             // stimulus: all_images[i],
             stimulus: images,
             correct_response: indexCorrect,
             shuffled_array: shuffledArray,
+            catch_trial: false,
         })
+
+        // adds a catch trial
+        if(i == catch_trial_index){
+            test_stimuli.push({
+                // stimulus: all_images[i],
+                stimulus: images,
+                correct_response: indexCorrect,
+                shuffled_array: shuffledArray,
+                catch_trial: true,
+            })
+        }
+
     }
     all_test_stimuli.push(test_stimuli)
 }
 
 
 
-
-var preload = {
-type: jsPsychPreload,
-images: preload_images
-// ask server about task to load
-// just for debugging, choose 1 example now
-// task A 20 * 4 images + label
-};
-timeline.push(preload);
+// preload_practice
+// var preload = {
+// type: jsPsychPreload,
+// images: preload_images
+// };
+// timeline.push(preload);
 
 /* define welcome message trial */
 var welcome = {
@@ -170,10 +207,16 @@ timeline.push(welcome);
 var instructions = {
 type: jsPsychHtmlKeyboardResponse,
 stimulus: `
-    <p>In this experiment, 4 images will appear on the screen. 3 out of 4 images were generated with a certain rule while one image (the odd one out) does not respect this rule. Select the odd one out by clicking on the image.</p>
-    <p>Following your choice, you will be asked to rate how confident you were about your choice on a scale from 1 to 100. Then, you will receive feedback on the trial.</p>
-    <p>For each rule you will perform 20 trials. You will be notified at each rule change. </p>
-    <p> Press any button to continue </p>
+    <p>This experiment aims to measure humans' visual reasoning skills. You will go through a practice session consisting of 3 trials, followed by 6 blocks of 21 trials.</p>
+    <p>When presented with an empty square in the middle of the screen, place your cursor on it to start the trial.</p>
+    <p>4 images will appear on the screen. 3 out of 4 images were generated with a certain rule while one image (the odd one out) does not respect this rule.</p>
+    <p>Select the odd one out by clicking on the image.</p>
+    <p>Following your choice, you will be asked to rate how confident you were about your choice on a scale from 0 to 100. Then, you will receive feedback on the trial.</p>
+    <p>The 21 trials of a block use the same rule and each block uses a different rule. At the end of each block, you will asked to describe the rule before starting a new block.</p>
+    <p>Please do not take breaks only in between blocks not in between trials.</p>
+    <p>The following 3 trials will allow you to get familiar with the odd-one-out task. The experiment starts after this practice session.</p>
+    
+    <p>Press any button to continue</p>
     <div style='margin: auto; position: relative; width: 400px; height: 400px;'>
         <div style='position: absolute; top: 0;     left: 0; '><img src='../static/img/square.png'></img></div>
         <div style='position: absolute; top: 0;     right: 0;'><img src='../static/img/square.png'></img></div>
@@ -189,13 +232,48 @@ post_trial_gap: 2000
 
 timeline.push(instructions);
 
+var instruction_check = {
+    type: jsPsychSurveyMultiSelect,
+    questions: [
+        {
+            type: 'multi-select',
+            prompt: "Select the correct answers. In this experiment:", 
+            name: 'Instruction Check', 
+            options: [
+                    'No mouse or trackpad are needed.', 
+                    'The practice session contains as many trials as the other blocks.', 
+                    'There are 6 blocks of 21 trials.', 
+                    "It's ok to take breaks within a block.", 
+                    "The tasks consists of choosing one image that's different from the other three.",
+                    "It's possible to reload the page in between trials."
+                ], 
+            required: true,
+        }
+    ],
+  };
+
+
+timeline.push(instruction_check);
+
+  
+var experiment_start = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `<p style='font-size: 40px'>The practice session is over. The experiment begin now!</p> 
+                <p>Please take pauses on only at the "new rule" pages.</p> 
+                <p>Press any key to begin.</p>`
+};
+
+var new_rule = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "<h1 style='font-size: 60px'>New Rule!</h1> <p>Press any key to begin.</p>"
+};
+
 var fixation = {
     // type: jsPsychHtmlKeyboardResponse,
     type: jsImageHover,
     // stimulus: '<div style="font-size:60px;">+</div>',
     stimulus: `<img style="max-width: 100%; max-height: 100%;" src='../static/img/square.png'></img>`,
 };
-
 
 var multiple_choice = {
     type: jsImageClick,
@@ -204,7 +282,8 @@ var multiple_choice = {
         all_choices: jsPsych.timelineVariable('stimulus'),
         task: 'response',
         correct_response: jsPsych.timelineVariable('correct_response'),
-        shuffled_array: jsPsych.timelineVariable('shuffled_array')
+        shuffled_array: jsPsych.timelineVariable('shuffled_array'),
+        catch_trial: jsPsych.timelineVariable('catch_trial'),
     },
     extensions: [
         {type: jsPsychExtensionMouseTracking, params: {}} //targets: ['#target']
@@ -216,9 +295,18 @@ var multiple_choice = {
     }
 };
 
+
+
+// var confidence = {
+//     type: jsPsychHtmlSliderResponse,
+//     stimulus: '<p>How confident are you about your choice ?</p>',
+//     labels: ['0','100'],
+//     canvas_size: [200, 500],
+// };
+
 var confidence = {
-    type: jsPsychHtmlSliderResponse,
-    stimulus: '<p>How confident are you about your choice ?</p>',
+    type: jsPsychHtmlHoverSlider,
+    stimulus: '<p>How confident are you about your choice ? (click on the bar)</p>',
     labels: ['0','100'],
     canvas_size: [200, 500],
 };
@@ -250,10 +338,10 @@ var feedback = {
                 
                 <div style='position: absolute; top: 40%; left: 30%; bottom: 40%; right: 30%;'>${fb}</div>
                 
-                <div class='jspsych-image' id='jspsych-image-0' data-choice='0' style='top: 0;     left: 0;'><img style="max-width: 100%; max-height: 100%;" src='${last_trial_data.all_choices[0]}' class='${extra_class[0]}'></img></div>
-                <div class='jspsych-image' id='jspsych-image-1' data-choice='1' style='top: 0;     right: 0;'><img style="max-width: 100%; max-height: 100%;" src='${last_trial_data.all_choices[1]}' class='${extra_class[1]}'></img></div>
-                <div class='jspsych-image' id='jspsych-image-2' data-choice='2' style='bottom: 0;  left: 0;'><img style="max-width: 100%; max-height: 100%;" src='${last_trial_data.all_choices[2]}' class='${extra_class[2]}'></img></div>
-                <div class='jspsych-image' id='jspsych-image-3' data-choice='3' style='bottom: 0;  right: 0;'><img style="max-width: 100%; max-height: 100%;" src='${last_trial_data.all_choices[3]}' class='${extra_class[3]}'></img></div>
+                <div class='jspsych-image' id='jspsych-image-0' data-choice='0' style='top: 0;     left: 0;'><img style="width: 100%; height: 100%;" src='${last_trial_data.all_choices[0]}' class='${extra_class[0]}'></img></div>
+                <div class='jspsych-image' id='jspsych-image-1' data-choice='1' style='top: 0;     right: 0;'><img style="width: 100%; height: 100%;" src='${last_trial_data.all_choices[1]}' class='${extra_class[1]}'></img></div>
+                <div class='jspsych-image' id='jspsych-image-2' data-choice='2' style='bottom: 0;  left: 0;'><img style="width: 100%; height: 100%;" src='${last_trial_data.all_choices[2]}' class='${extra_class[2]}'></img></div>
+                <div class='jspsych-image' id='jspsych-image-3' data-choice='3' style='bottom: 0;  right: 0;'><img style="width: 100%; height: 100%;" src='${last_trial_data.all_choices[3]}' class='${extra_class[3]}'></img></div>
 
         </div>`
         return html
@@ -265,22 +353,69 @@ var feedback = {
     trial_duration: function(){if(jsPsych.data.get().last(2).values()[0].correct){return 1500} else {return 2500}},    
 };
 
-var new_rule = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: "<h1 style='font-size: 60px'>New Rule!</h1> <p>Press any key to begin.</p>"
+var task_description = {
+    type: jsPsychSurveyText,
+    questions: [
+      {prompt: 'Describe the rule in a few words.', rows: 5}
+    ]
+}
+
+
+var preload = {
+    type: jsPsychPreload,
+    images: preload_practice
 };
 
+var practice_block = {
+    // timeline: [fixation, multiple_choice, confidence, feedback],
+    timeline: [fixation, multiple_choice, confidence, feedback],
+    timeline_variables: practice_stimuli,
+    on_timeline_finish: function() {
+        console.log('This timeline has finished.');
+        save_block(jsPsych.data.get().last(4 * practice_stimuli.length).json())        
+    },
+};
+
+
+timeline.push(preload);
+timeline.push(practice_block);
+timeline.push(experiment_start);
+
 for (let i = 0; i < tasks.length; i++) {
+    
+    var preload = {
+        type: jsPsychPreload,
+        images: all_preload_images[i]
+    };
+    
+    var block_end = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<h1 style='font-size: 60px'>Block End</h1>",
+        choices: "NO_KEYS",
+        trial_duration: 500,
+        on_trial_finish: function(){
+            save_block(jsPsych.data.get().last(1 + 4 * all_test_stimuli[i].length).json());
+            console.log('saved block');
+        },
+    };
+    
     /* define test procedure */
     var block = {
         // timeline: [fixation, multiple_choice, confidence, feedback],
         timeline: [fixation, multiple_choice, confidence, feedback],
         timeline_variables: all_test_stimuli[i],
+        // on_timeline_finish: function() {
+        //     console.log('This timeline has finished.');
+        //     save_block(jsPsych.data.get().last(1 + 4 * all_test_stimuli[i].length).json())        
+        // },
     };
-
+    
+    timeline.push(preload);
     timeline.push(new_rule);
     timeline.push(block);
-
+    timeline.push(task_description);
+    timeline.push(block_end);
+    
 }
 
 /* define debrief */

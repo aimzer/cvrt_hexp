@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CVRT Experiment</title>
+  <title>Behavioral Experiment - Main</title>
 
   <!-- Load libraries -->
   <script src="../static/lib/jquery-3.3.1/jquery.min.js"></script>
@@ -16,9 +16,12 @@
   <script src="../static/lib/jspsych-7.2.1/plugin-image-keyboard-response.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugin-html-slider-response.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugin-preload.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugin-survey-text.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugin-survey-multi-select.js"></script>
   <script src="../static/lib/jspsych-7.2.1/extension-mouse-tracking.js"></script>
 
   <script src="../static/js/plugin-image-click.js"></script>
+  <script src="../static/js/plugin-hover-slider.js"></script>
   <script src="../static/js/fixation-hover.js"></script>
   <script src="../static/js/utils.js"></script>
   <!-- <script src="../static/js/cvrt_exp.js"></script> -->
@@ -32,7 +35,8 @@
 <body></body>
 
   <script type="text/javascript">
-    var baseFolder = '../static/human_exp_images/'
+    var baseFolder = '../static/human_exp_images/';
+    // var practiceFolder = '../static/practice_img/';
     var n_trials = {{ n_trials }};
 
     var tasks = {{ tasks_names|tojson }};

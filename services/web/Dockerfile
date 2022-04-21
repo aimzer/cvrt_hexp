@@ -3,26 +3,26 @@
 
 FROM python:3.9.5-slim-buster as builder
 
-MAINTAINER Aimen Zerroug <aimen.zerroug@gmail.com>
-
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     git \
+#     && rm -rf /var/lib/apt/lists/*
 
     # gcc \
 
-RUN git clone https://github.com/aimzer/cvrt_hexp.git
-
+# RUN git clone https://github.com/aimzer/cvrt_hexp.git
+# COPY ./services/web/requirements.txt .
+COPY ./requirements.txt .
 
 # install the dependencies and packages in the requirements file
 RUN pip install --upgrade pip
-RUN pip install -r cvrt_hexp/services/web/requirements.txt
+# RUN pip install -r cvrt_hexp/services/web/requirements.txt
+RUN pip install -r requirements.txt
 
 
 
@@ -40,7 +40,10 @@ ENV APP_HOME=/home/app/web
 RUN mkdir $APP_HOME
 # WORKDIR $APP_HOME
 
-RUN cp -r cvrt_hexp/services/web/* $APP_HOME
+# RUN cp -r cvrt_hexp/services/web/* $APP_HOME
+
+COPY . $APP_HOME
+
 
 WORKDIR $APP_HOME
 

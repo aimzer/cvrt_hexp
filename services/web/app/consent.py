@@ -86,7 +86,7 @@ def consent_post():
         return redirect(url_for('error.error', errornum=1005))
 
     ## Check participant response.
-    elif subj_consent:
+    elif subj_consent == 1:
 
         ## Update participant metadata.
         session['consent'] = True
@@ -95,7 +95,6 @@ def consent_post():
         ## Redirect participant to alert page.
         return redirect(url_for('alert.alert'))
         # return redirect(url_for('experiment.experiment'))
-        
 
     else:
 

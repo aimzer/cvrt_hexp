@@ -3,8 +3,6 @@
 
 FROM python:3.9.5-slim-buster as builder
 
-MAINTAINER Aimen Zerroug <aimen.zerroug@gmail.com>
-
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1

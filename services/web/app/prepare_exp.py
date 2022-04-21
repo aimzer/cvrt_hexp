@@ -411,7 +411,7 @@ trial_sequence =[
 
 def prepare_experiment(p_idx):
 
-    n_trials = 3
+    n_trials = 20
 
     trial_seq_idx = p_idx // len(trial_combinations)
     trial_idx = p_idx % len(trial_combinations)

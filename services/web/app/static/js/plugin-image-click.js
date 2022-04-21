@@ -74,10 +74,10 @@ var jsImageClick = (function (jspsych) {
         // style: "max-width=100%; max-height: 100%;" 
         //display buttons
         var html = ` <div id='jspsych-image-click-button' style='position: relative;  width: min(80vw, 80vh); height: min(80vw, 80vh);'>
-                <div class='jspsych-image-click-button' id='jspsych-image-click-button-0' data-choice='0' style='top: 0;     left: 0;'><img style="max-width: 100%; max-height: 100%;" src='${trial.choices[0]}'></img></div>
-                <div class='jspsych-image-click-button' id='jspsych-image-click-button-1' data-choice='1' style='top: 0;     right: 0;'><img style="max-width: 100%; max-height: 100%;" src='${trial.choices[1]}'></img></div>
-                <div class='jspsych-image-click-button' id='jspsych-image-click-button-2' data-choice='2' style='bottom: 0;  left: 0;'><img style="max-width: 100%; max-height: 100%;" src='${trial.choices[2]}'></img></div>
-                <div class='jspsych-image-click-button' id='jspsych-image-click-button-3' data-choice='3' style='bottom: 0;  right: 0;'><img style="max-width: 100%; max-height: 100%;" src='${trial.choices[3]}'></img></div>
+                <div class='jspsych-image-click-button' id='jspsych-image-click-button-0' data-choice='0' style='top: 0;     left: 0;'> <img style="width: 100%; height: 100%;" src='${trial.choices[0]}'></img></div>
+                <div class='jspsych-image-click-button' id='jspsych-image-click-button-1' data-choice='1' style='top: 0;     right: 0;'><img style="width: 100%; height: 100%;" src='${trial.choices[1]}'></img></div>
+                <div class='jspsych-image-click-button' id='jspsych-image-click-button-2' data-choice='2' style='bottom: 0;  left: 0;'> <img style="width: 100%; height: 100%;" src='${trial.choices[2]}'></img></div>
+                <div class='jspsych-image-click-button' id='jspsych-image-click-button-3' data-choice='3' style='bottom: 0;  right: 0;'><img style="width: 100%; height: 100%;" src='${trial.choices[3]}'></img></div>
             </div>`
 
         //   var buttons = [];

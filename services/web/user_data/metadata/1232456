@@ -1,0 +1,27 @@
+2022-04-16 19:49:06	workerId	1232456
+2022-04-16 19:49:06	hitId	None
+2022-04-16 19:49:06	assignmentId	None
+2022-04-16 19:49:06	subId	20g7cvgqw9z7wn9gvceozg0a
+2022-04-16 19:49:06	address	127.0.0.1
+2022-04-16 19:49:06	browser	firefox
+2022-04-16 19:49:06	platform	linux
+2022-04-16 19:49:06	version	98.0
+2022-04-16 19:49:08	consent	True
+2022-04-16 19:49:08	alert	True
+2022-04-16 19:49:11	experiment	True
+2022-04-16 19:49:11	exp_idx	8
+2022-04-16 19:49:11	trial_idx	8
+2022-04-16 19:49:11	trial_seq_idx	0
+2022-04-16 19:56:48	ERROR	1004: Revisited experiment.
+2022-04-16 19:56:48	complete	error
+2022-04-16 19:56:55	WARNING	Revisited experiment page.
+2022-04-16 19:56:55	WARNING	Revisited complete.
+2022-04-16 19:56:59	consent	True
+2022-04-16 19:56:59	WARNING	Revisited alert page.
+2022-04-16 19:56:59	WARNING	Revisited complete.
+2022-04-16 19:57:07	WARNING	Revisited experiment page.
+2022-04-16 19:57:07	WARNING	Revisited complete.
+2022-04-16 19:57:08	WARNING	Revisited alert page.
+2022-04-16 19:57:08	WARNING	Revisited complete.
+2022-04-16 19:57:08	WARNING	Revisited consent page.
+2022-04-16 19:57:08	WARNING	Revisited complete.

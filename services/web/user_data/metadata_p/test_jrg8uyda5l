@@ -1,0 +1,20 @@
+2022-04-17 02:47:47	workerId	test_jrg8uyda5l
+2022-04-17 02:47:47	hitId	None
+2022-04-17 02:47:47	assignmentId	None
+2022-04-17 02:47:47	subId	cf9o6ihvoc8e0xywdpni5i14
+2022-04-17 02:47:47	address	127.0.0.1
+2022-04-17 02:47:47	browser	firefox
+2022-04-17 02:47:47	platform	linux
+2022-04-17 02:47:47	version	98.0
+2022-04-17 02:47:49	consent	True
+2022-04-17 02:47:49	alert	True
+2022-04-17 02:47:50	experiment	True
+2022-04-17 02:47:50	exp_idx	4
+2022-04-17 02:47:50	trial_idx	4
+2022-04-17 02:47:50	trial_seq_idx	0
+2022-04-17 02:48:00	complete	success
+2022-04-17 02:48:00	code_success	PROLIFIC_CODE_GOES_HERE
+2022-04-17 02:48:00	WARNING	Revisited complete.
+2022-04-17 02:48:00	WARNING	Revisited complete.
+2022-04-17 02:48:00	complete	reject
+2022-04-17 02:48:00	code_reject	D60F2155

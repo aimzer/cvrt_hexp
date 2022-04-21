@@ -1,0 +1,17 @@
+2022-04-17 11:50:04	workerId	test_g6t58sk3tk
+2022-04-17 11:50:04	hitId	None
+2022-04-17 11:50:04	assignmentId	None
+2022-04-17 11:50:04	subId	cup65vf9azuh1sftkvpw7h68
+2022-04-17 11:50:04	address	127.0.0.1
+2022-04-17 11:50:04	browser	None
+2022-04-17 11:50:04	platform	None
+2022-04-17 11:50:04	version	None
+2022-04-17 11:50:06	consent	True
+2022-04-17 11:50:06	alert	True
+2022-04-17 11:50:07	experiment	True
+2022-04-17 11:50:07	exp_idx	11
+2022-04-17 11:50:07	trial_idx	11
+2022-04-17 11:50:07	trial_seq_idx	0
+2022-04-17 11:50:32	complete	success
+2022-04-17 11:50:32	code_success	PROLIFIC_CODE_GOES_HERE
+2022-04-17 11:50:32	WARNING	Revisited complete.

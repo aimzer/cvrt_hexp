@@ -29,7 +29,7 @@ def complete():
         if 'experiment' in session and session['experiment']:
             remove_exp(session)
         
-        if 'test' in session['workerId']:
+        if 'test' in session['workerId'] or 'debug' in session['workerId']:
             return render_template('exit.html')
         else:
             ## Redirect participant with decoy code.
@@ -44,7 +44,7 @@ def complete():
         session['WARNING'] = "Revisited complete."
         write_metadata(session, ['WARNING'], 'a')
 
-        if 'test' in session['workerId']:
+        if 'test' in session['workerId'] or 'debug' in session['workerId']:
             return render_template('exit.html')
         else:
             ## Redirect participant with completion code.
@@ -61,7 +61,7 @@ def complete():
         if 'experiment' in session and session['experiment']:
             remove_exp(session)
 
-        if 'test' in session['workerId']:
+        if 'test' in session['workerId'] or 'debug' in session['workerId']:
             return render_template('exit.html')
         else:
             ## Redirect participant with decoy code.

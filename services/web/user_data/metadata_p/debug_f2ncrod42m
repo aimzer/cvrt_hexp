@@ -1,0 +1,15 @@
+2022-04-19 17:53:20	workerId	debug_f2ncrod42m
+2022-04-19 17:53:20	hitId	None
+2022-04-19 17:53:20	assignmentId	None
+2022-04-19 17:53:20	subId	4bowck95fqjdcxqi879rinf2
+2022-04-19 17:53:20	address	127.0.0.1
+2022-04-19 17:53:20	browser	firefox
+2022-04-19 17:53:20	platform	linux
+2022-04-19 17:53:20	version	98.0
+2022-04-19 17:53:20	experiment	True
+2022-04-19 17:53:20	exp_idx	18
+2022-04-19 17:53:20	trial_idx	18
+2022-04-19 17:53:20	trial_seq_idx	0
+2022-04-19 18:01:51	complete	success
+2022-04-19 18:01:51	code_success	PROLIFIC_CODE_GOES_HERE
+2022-04-19 18:01:51	WARNING	Revisited complete.

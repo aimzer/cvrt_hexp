@@ -1,0 +1,18 @@
+2022-04-17 02:55:15	workerId	test_5jkm4pri0p
+2022-04-17 02:55:15	hitId	None
+2022-04-17 02:55:15	assignmentId	None
+2022-04-17 02:55:15	subId	968i03tokd9pjsap8kccvf9c
+2022-04-17 02:55:15	address	127.0.0.1
+2022-04-17 02:55:15	browser	firefox
+2022-04-17 02:55:15	platform	linux
+2022-04-17 02:55:15	version	98.0
+2022-04-17 02:55:17	consent	True
+2022-04-17 02:55:17	alert	True
+2022-04-17 02:55:18	experiment	True
+2022-04-17 02:55:18	exp_idx	4
+2022-04-17 02:55:18	trial_idx	4
+2022-04-17 02:55:18	trial_seq_idx	0
+2022-04-17 02:55:28	complete	success
+2022-04-17 02:55:28	code_success	PROLIFIC_CODE_GOES_HERE
+2022-04-17 02:55:28	WARNING	Revisited complete.
+2022-04-17 02:55:28	WARNING	Revisited complete.

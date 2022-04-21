@@ -1,4 +1,5 @@
 import os
+import json
 from datetime import datetime
 
 def write_metadata(session, keys, mode='w'):
@@ -44,6 +45,26 @@ def write_data(session, json, method='pass'):
         fout = os.path.join(session['reject'], '%s.json' %session['subId'])
 
     with open(fout, 'w') as f: f.write(json)
+
+def append_data(session, json):
+    """Write jsPsych output to disk.
+
+    Parameters
+    ----------
+    session : flask session
+        Current user session.
+    json : object
+        Data object returned by jsPsych.
+    method : pass | reject
+        Designates target folder for data.
+    """
+
+    idx = len([f for f in os.listdir(session['data']) if session['subId'] in f])
+    # Write data to disk.
+    fout = os.path.join(session['data'], '{}_{}.json'.format(session['subId'], idx))
+    print(fout)
+    with open(fout, 'w') as f: f.write(json)
+
 
 
 def write_exp_db(session, keys, mode='w'):

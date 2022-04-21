@@ -1,7 +1,7 @@
 from itertools import combinations
 
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
-from .io import write_data, write_metadata, write_exp_db, remove_exp
+from .io import write_data, write_metadata, write_exp_db, remove_exp, append_data
 # from prepare_exp import prepare_experiment
 from .prepare_exp import N_CONDITIONS, unqueue_experiment, prepare_experiment
 
@@ -63,6 +63,10 @@ def experiment():
 
         write_exp_db(session, ['workerId', 'exp_idx', 'exp_count'], 'w')
 
+        if session['experiment_debug']:
+            tasks_names = tasks_names[0:1]
+            n_trials = 3
+
         content = {
             "workerId": session['workerId'], 
             "assignmentId": session['assignmentId'], 
@@ -71,10 +75,8 @@ def experiment():
             "code_reject": session['code_reject'],
             "trial_idx": trial_idx, 
             "trial_seq_idx": trial_seq_idx, 
-            # "tasks_names": tasks_names, 
-            "tasks_names": tasks_names[0:1], # for debugging 
-            # "n_trials": n_trials,
-            "n_trials": 3,
+            "tasks_names": tasks_names, 
+            "n_trials": n_trials,
         }
 
         ## Present experiment.
@@ -100,6 +102,28 @@ def pass_message():
     ## For a full list of status codes, see:
     ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
     return ('', 200)
+
+
+@bp.route('/save_block', methods=['POST'])
+def save_block():
+    """Write jsPsych message to metadata."""
+
+    if request.is_json:
+
+        ## Retrieve jsPsych data.
+        JSON = request.get_json()
+
+        # write_data(session, ['MESSAGE'], 'a')
+        append_data(session, JSON)
+        
+
+    ## DEV NOTE:
+    ## This function returns the HTTP response status code: 200
+    ## Code 200 signifies the POST request has succeeded.
+    ## For a full list of status codes, see:
+    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+    return ('', 200)
+
 
 @bp.route('/redirect_success', methods = ['GET', 'POST'])
 def redirect_success():

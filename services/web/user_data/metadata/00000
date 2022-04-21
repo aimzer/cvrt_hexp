@@ -1,0 +1,23 @@
+2022-04-17 00:13:04	workerId	00000
+2022-04-17 00:13:04	hitId	None
+2022-04-17 00:13:04	assignmentId	None
+2022-04-17 00:13:04	subId	ns0um6e4hp6xqxt5gd4uup50
+2022-04-17 00:13:04	address	127.0.0.1
+2022-04-17 00:13:04	browser	firefox
+2022-04-17 00:13:04	platform	linux
+2022-04-17 00:13:04	version	98.0
+2022-04-17 00:13:19	complete	reject
+2022-04-17 00:13:19	code_reject	D60F2155
+2022-04-17 00:13:28	consent	True
+2022-04-17 00:13:28	WARNING	Revisited alert page.
+2022-04-17 00:13:28	WARNING	Revisited complete.
+2022-04-17 00:13:39	subId	6xem6espk5iqfr7lyaqyum27
+2022-04-17 00:13:39	WARNING	Assigned new subId.
+2022-04-17 00:13:42	consent	True
+2022-04-17 00:13:42	alert	True
+2022-04-17 00:13:44	experiment	True
+2022-04-17 00:13:44	exp_idx	23
+2022-04-17 00:13:44	trial_idx	23
+2022-04-17 00:13:44	trial_seq_idx	0
+2022-04-17 00:13:44	complete	reject
+2022-04-17 00:13:44	code_reject	D60F2155

@@ -6,32 +6,38 @@ from .utils import gen_code
 __version__ = '1.1'
 
 ## Define root directory.
-ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+APP_DIR = os.path.dirname(os.path.realpath(__file__))
 
 ## Load and parse configuration file.
 cfg = configparser.ConfigParser()
-cfg.read(os.path.join(ROOT_DIR, 'app.ini'))
+cfg.read(os.path.join(APP_DIR, 'app.ini'))
+
+ROOT_DIR = os.getenv('APP_HOME')
 
 ## Ensure output directories exist.
 data_dir = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
-if not os.path.isdir(data_dir): os.makedirs(data_dir)
+if not os.path.isdir(data_dir): os.makedirs(data_dir, exist_ok=True)
 meta_dir = os.path.join(ROOT_DIR, cfg['IO']['METADATA'])
-if not os.path.isdir(meta_dir): os.makedirs(meta_dir)
+if not os.path.isdir(meta_dir): os.makedirs(meta_dir, exist_ok=True)
 reject_dir = os.path.join(ROOT_DIR, cfg['IO']['REJECT'])
-if not os.path.isdir(reject_dir): os.makedirs(reject_dir)
+if not os.path.isdir(reject_dir): os.makedirs(reject_dir, exist_ok=True)
 exp_db_dir = os.path.join(ROOT_DIR, cfg['IO']['EXP_DB'])
-if not os.path.isdir(exp_db_dir): os.makedirs(exp_db_dir)
+if not os.path.isdir(exp_db_dir): os.makedirs(exp_db_dir, exist_ok=True)
 
 ## Ensure output directories exist.
 data_dir_p = os.path.join(ROOT_DIR, cfg['IO']['DATA_PILOT'])
-if not os.path.isdir(data_dir_p): os.makedirs(data_dir_p)
+if not os.path.isdir(data_dir_p): os.makedirs(data_dir_p, exist_ok=True)
 meta_dir_p = os.path.join(ROOT_DIR, cfg['IO']['METADATA_PILOT'])
-if not os.path.isdir(meta_dir_p): os.makedirs(meta_dir_p)
+if not os.path.isdir(meta_dir_p): os.makedirs(meta_dir_p, exist_ok=True)
 reject_dir_p = os.path.join(ROOT_DIR, cfg['IO']['REJECT_PILOT'])
-if not os.path.isdir(reject_dir_p): os.makedirs(reject_dir_p)
+if not os.path.isdir(reject_dir_p): os.makedirs(reject_dir_p, exist_ok=True)
 exp_db_dir_p = os.path.join(ROOT_DIR, cfg['IO']['EXP_DB_PILOT'])
-if not os.path.isdir(exp_db_dir_p): os.makedirs(exp_db_dir_p)
+if not os.path.isdir(exp_db_dir_p): os.makedirs(exp_db_dir_p, exist_ok=True)
 
+
+
+worker_type_test = cfg['FLASK'].getboolean('DEBUG_SETUP')
+experiment_debug = cfg['FLASK'].getboolean('DEBUG_EXP')
 
 ## Check Flask mode; if debug mode, clear session variable.
 debug = cfg['FLASK'].getboolean('DEBUG')
@@ -45,6 +51,9 @@ if secret_key == "PLEASE_CHANGE_THIS":
 
 ## Initialize Flask application.
 app = Flask(__name__)
+# app = Flask(__name__, static_url_path="/cvrt/static", static_folder='/home/app/web/app/static')
+
+
 
 # app.config.from_object("app.config.Config")
 
@@ -105,7 +114,11 @@ def index():
     )
 
     if info['workerId'] is None:
-        info['workerId'] = 'test_' + gen_code(10)
+        if worker_type_test:
+            info['workerId'] = 'test_' + gen_code(10)
+        else:
+            info['workerId'] = 'debug_' + gen_code(10)
+        
 
         ## Store directories for piloting
         session['data'] = data_dir_p
@@ -121,6 +134,7 @@ def index():
         session['reject'] = reject_dir
         session['exp_db'] = exp_db_dir
 
+    session['experiment_debug'] = experiment_debug
 
     ## Case 1: workerId absent.
     if info['workerId'] is None:
@@ -164,9 +178,12 @@ def index():
             for k, v in info.items(): session[k] = v
             session['WARNING'] = "Assigned new subId."
             write_metadata(session, ['subId','WARNING'], 'a')
-
-            ## Redirect participant to consent form.
-            return redirect(url_for('consent.consent'))
+            
+            if 'debug' in info['workerId']:
+                return redirect(url_for('experiment.experiment'))
+            else:
+                ## Redirect participant to consent form.
+                return redirect(url_for('consent.consent'))
 
     ## Case 4: repeat visit, manually changed workerId.
     elif 'workerId' in session and session['workerId'] != info['workerId']:
@@ -199,8 +216,11 @@ def index():
         session['WARNING'] = "Revisited home."
         write_metadata(session, ['WARNING'], 'a')
 
-        ## Redirect participant to consent form.
-        return redirect(url_for('consent.consent'))
+        if 'debug' in info['workerId']:
+            return redirect(url_for('experiment.experiment'))
+        else:
+            ## Redirect participant to consent form.
+            return redirect(url_for('consent.consent'))
 
     ## Case 7: first visit, workerId present.
     else:
@@ -210,5 +230,8 @@ def index():
         for k, v in info.items(): session[k] = v
         write_metadata(session, ['workerId','hitId','assignmentId','subId','address','browser','platform','version'], 'w')
 
-        ## Redirect participant to consent form.
-        return redirect(url_for('consent.consent'))
+        if 'debug' in info['workerId']:
+            return redirect(url_for('experiment.experiment'))
+        else:
+            ## Redirect participant to consent form.
+            return redirect(url_for('consent.consent'))
