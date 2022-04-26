@@ -27,5 +27,5 @@ services/web/metadata_p
 services/web/reject_p
 services/web/exp_db_p
 
-
+services/web/user_data
 services/web/app/static/human_exp_images

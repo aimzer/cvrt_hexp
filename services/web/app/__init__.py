@@ -14,6 +14,7 @@ cfg.read(os.path.join(APP_DIR, 'app.ini'))
 
 ROOT_DIR = os.getenv('APP_HOME')
 
+print(ROOT_DIR)
 ## Ensure output directories exist.
 data_dir = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
 if not os.path.isdir(data_dir): os.makedirs(data_dir, exist_ok=True)

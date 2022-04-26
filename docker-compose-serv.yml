@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+  web:
+    image: aimzer/cvrt_hexp
+    user: app
+    build: ./services/web
+    command: gunicorn --bind 0.0.0.0:9000 -w 4 manage:app
+    ports:
+      - 127.0.0.1:9000:9000
+    env_file:
+      - ./.env.prod
+    volumes:
+      - /user/azerroug/user_data:/home/app/web/user_data
+      - /user/azerroug/static:/home/app/web/app/static

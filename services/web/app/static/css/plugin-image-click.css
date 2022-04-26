@@ -1,14 +1,18 @@
+.jspsych-image-click-button{
+    border: 2px solid black;
+}
+
 .jspsych-image-click-button:hover{
     transform: scale(1.2);
     cursor:pointer;
 }
 
 .correct-choice {
-    border: 5px solid green;
+    border: 20px solid green;
 }
 
 .wrong-choice {
-    border: 5px solid red;
+    border: 20px solid red;
 }
 
 .jspsych-image-click-button{

@@ -9,13 +9,13 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#     git \
-#     && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
     # gcc \
 
-# RUN git clone https://github.com/aimzer/cvrt_hexp.git
+
 # COPY ./services/web/requirements.txt .
 COPY ./requirements.txt .
 
@@ -40,6 +40,7 @@ ENV APP_HOME=/home/app/web
 RUN mkdir $APP_HOME
 # WORKDIR $APP_HOME
 
+# RUN git clone https://github.com/aimzer/cvrt_hexp.git
 # RUN cp -r cvrt_hexp/services/web/* $APP_HOME
 
 COPY . $APP_HOME

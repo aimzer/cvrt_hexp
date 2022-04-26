@@ -64,7 +64,7 @@ def experiment():
         write_exp_db(session, ['workerId', 'exp_idx', 'exp_count'], 'w')
 
         if session['experiment_debug']:
-            tasks_names = tasks_names[0:1]
+            # tasks_names = tasks_names[0:1]
             n_trials = 3
 
         content = {

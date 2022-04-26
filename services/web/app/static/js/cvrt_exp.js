@@ -393,7 +393,7 @@ for (let i = 0; i < tasks.length; i++) {
         stimulus: "<h1 style='font-size: 60px'>Block End</h1>",
         choices: "NO_KEYS",
         trial_duration: 500,
-        on_trial_finish: function(){
+        on_start: function(){
             save_block(jsPsych.data.get().last(1 + 4 * all_test_stimuli[i].length).json());
             console.log('saved block');
         },
