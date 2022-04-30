@@ -3,7 +3,7 @@ from itertools import combinations
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
 from .io import write_data, write_metadata, write_exp_db, remove_exp, append_data
 # from prepare_exp import prepare_experiment
-from .prepare_exp import N_CONDITIONS, unqueue_experiment, prepare_experiment
+from .prepare_exp import unqueue_experiment, prepare_experiment
 
 
 ## Initialize blueprint.
@@ -49,11 +49,11 @@ def experiment():
         ## Update participant metadata.
         session['experiment'] = True
         
-        exp_idx, count = unqueue_experiment(session['exp_db'])
+        exp_idx, count = unqueue_experiment(session['exp_db'], pilote=session['pilote'])
         session['exp_idx'] = exp_idx
         session['exp_count'] = count
 
-        trial_idx, trial_seq_idx, tasks_names, n_trials = prepare_experiment(session['exp_idx'])
+        trial_idx, trial_seq_idx, tasks_names, n_trials = prepare_experiment(session['exp_idx'], pilote=session['pilote'])
 
         session['trial_idx'] = trial_idx
         session['trial_seq_idx'] = trial_seq_idx

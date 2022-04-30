@@ -40,6 +40,8 @@ if not os.path.isdir(exp_db_dir_p): os.makedirs(exp_db_dir_p, exist_ok=True)
 worker_type_test = cfg['FLASK'].getboolean('DEBUG_SETUP')
 experiment_debug = cfg['FLASK'].getboolean('DEBUG_EXP')
 
+pilote = cfg['FLASK'].getboolean('PILOTE')
+
 ## Check Flask mode; if debug mode, clear session variable.
 debug = cfg['FLASK'].getboolean('DEBUG')
 if debug:
@@ -136,6 +138,8 @@ def index():
         session['exp_db'] = exp_db_dir
 
     session['experiment_debug'] = experiment_debug
+
+    session['pilote'] = pilote
 
     ## Case 1: workerId absent.
     if info['workerId'] is None:

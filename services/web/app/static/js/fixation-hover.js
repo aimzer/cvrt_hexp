@@ -73,7 +73,7 @@ var jsImageHover = (function (jspsych) {
         //   var html = '<div id="jspsych-image-click">' + trial.stimulus + "</div>";
         // style: "max-width=100%; max-height: 100%;" 
         //display buttons
-        var html = ` <div id='jspsych-image-hover' style='position: relative;  width: min(20vw, 20vh); height: min(20vw, 20vh);'>
+        var html = ` <div id='jspsych-image-hover' style='position: relative;  width: min(10vw, 10vh); height: min(10vw, 10vh);'>
                     ${trial.stimulus}            
                     </div>`
                     // <img style="max-width: 100%; max-height: 100%;" src='${trial.stimulus}'></img>

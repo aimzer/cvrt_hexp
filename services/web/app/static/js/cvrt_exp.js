@@ -1,10 +1,4 @@
 
-// function run_experiment(baseFolder, tasks, n_tasks, n_trials){
-    
-    
-    
-    
-
 // Define global variables.
 var low_quality = false;
 
@@ -15,26 +9,6 @@ function verify_unload(e){
 };
 window.addEventListener("beforeunload", verify_unload);
 
-// function cancel_exp(e){
-//     discard_experiment("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_reject}}")
-//     console.log('quitting')
-//     return null;
-// };
-// window.addEventListener("unload", cancel_exp);
-
-// $(window).on('unload', function() {
-// 	// async: false will make the AJAX synchronous in case you're using jQuery
-// 	// $.ajax({
-//     //     type: 'POST',
-//     //     url: 'ajax.php',
-//     //     data: { ajax_data : 22 },
-//     //     async: false
-//     // });
-
-//     discard_experiment("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_reject}}")
-
-// });
-
 
 disard_exp = () => {discard_experiment("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_reject}}")}
 
@@ -43,6 +17,9 @@ $(window).on('unload', disard_exp);
 
 /* initialize jsPsych */
 var jsPsych = initJsPsych({
+    show_progress_bar: true,
+    auto_update_progress_bar: false,
+
 on_finish: function() {
     // jsPsych.data.displayData();
 
@@ -56,7 +33,20 @@ on_finish: function() {
 
     // Display jsPsych data in viewport.
     // jsPsych.data.displayData();
-    var low_quality = false;
+    
+    // calculate the number of correct responses to the instruction question
+    var n_failed_comp_checks = jsPsych.data.get().filter({trial_type: "survey-multi-select"}).count()-1;
+    // the number of wrongly answered catch_trials
+    var n_failed_att_checks = jsPsych.data.get().filter({catch_trial: true}).filter({correct: false}).count();
+    // var n_failed_comp_checks = jsPsych.data.get().select('trial_type').subset(function(x){ return x == "survey-multi-select"; }).count()-1;
+    
+    // rule descriptions aren't empty
+    var n_empty_rule_desc = jsPsych.data.get().filter({catch_trial: true}).filter({correct: false}).count();
+    
+    // reaction times aren't too low
+    var n_rt_below_thres = jsPsych.data.get().filter({catch_trial: true}).filter({correct: false}).count();
+
+    var low_quality = n_failed_att_checks>2;
 
     if (low_quality) {
 
@@ -79,18 +69,6 @@ extensions: [
 var timeline = [
 ];
 
-
-// var baseFolder = '../static/human_exp_images/'
-// var tasks = "{{ tasks_names|tojson }}";
-// var n_tasks = tasks.length;
-// var n_trials = "{{ n_trials }}";
-
-
-// var tasks = ['task_count', 'task_inside', 'task_count_inside_1'];
-// var n_tasks = 4;
-// var n_trials = 3;
-// var all_tasks = [{task_idx: 0}, {task_idx: 1}, {task_idx: 2}] 
-// var tasks = {{ geocode|tojson }};
 
 function load_task(baseFolder, task, n_trials_){
     var all_images = [];
@@ -146,7 +124,14 @@ for (let i = 0; i < 3; i++) {
         correct_response: indexCorrect,
         shuffled_array: shuffledArray,
         catch_trial: false,
+        n_trials: 3,
     })
+}
+
+var stim_trial_idx = [];
+
+for (var i = 0; i < n_trials; i++) {
+    stim_trial_idx.push(i);
 }
 
 var all_test_stimuli = []
@@ -155,31 +140,37 @@ for (let k = 0; k < n_tasks; k++) {
 
     var catch_trial_index = Math.floor(Math.random() * 10) + 5;
     var test_stimuli = [];
+    
+    var stim_order = jsPsych.randomization.shuffleNoRepeats(stim_trial_idx);
+    
     for (let i = 0; i < n_trials; i++) {
         
         var shuffledArray = jsPsych.randomization.shuffleNoRepeats(labelArray);
         var images = []
         for (let j = 0; j < 4; j++){
             if(shuffledArray[j] == 3){var indexCorrect=j;}
-            images.push(all_tasks_images[k][i][shuffledArray[j]])
+            images.push(all_tasks_images[k][stim_order[i]][shuffledArray[j]])
         }
 
         test_stimuli.push({
-            // stimulus: all_images[i],
+            stim_idx: stim_order[i],
             stimulus: images,
             correct_response: indexCorrect,
             shuffled_array: shuffledArray,
             catch_trial: false,
+            n_trials: n_trials+1,
         })
 
         // adds a catch trial
         if(i == catch_trial_index){
             test_stimuli.push({
                 // stimulus: all_images[i],
+                stim_idx: stim_order[i],
                 stimulus: images,
                 correct_response: indexCorrect,
                 shuffled_array: shuffledArray,
                 catch_trial: true,
+                n_trials: n_trials+1,
             })
         }
 
@@ -187,6 +178,7 @@ for (let k = 0; k < n_tasks; k++) {
     all_test_stimuli.push(test_stimuli)
 }
 
+var n_all_trials = n_trials * n_tasks + 3
 
 
 // preload_practice
@@ -204,33 +196,80 @@ stimulus: "<p style='font-size: 40px'>Welcome to the experiment.</p><p style='fo
 timeline.push(welcome);
 
 /* define instructions trial */
-var instructions = {
+var instructions_1 = {
 type: jsPsychHtmlKeyboardResponse,
 stimulus: `
-    <p>This experiment aims to measure humans' visual reasoning skills. You will go through a practice session consisting of 3 trials, followed by 6 blocks of 21 trials.</p>
-    <p>When presented with an empty square in the middle of the screen, place your cursor on it to start the trial.</p>
-    <p>4 images will appear on the screen. 3 out of 4 images were generated with a certain rule while one image (the odd one out) does not respect this rule.</p>
-    <p>Select the odd one out by clicking on the image.</p>
-    <p>Following your choice, you will be asked to rate how confident you were about your choice on a scale from 0 to 100. Then, you will receive feedback on the trial.</p>
-    <p>The 21 trials of a block use the same rule and each block uses a different rule. At the end of each block, you will asked to describe the rule before starting a new block.</p>
-    <p>Please do not take breaks only in between blocks not in between trials.</p>
-    <p>The following 3 trials will allow you to get familiar with the odd-one-out task. The experiment starts after this practice session.</p>
-    
-    <p>Press any button to continue</p>
-    <div style='margin: auto; position: relative; width: 400px; height: 400px;'>
-        <div style='position: absolute; top: 0;     left: 0; '><img src='../static/img/square.png'></img></div>
-        <div style='position: absolute; top: 0;     right: 0;'><img src='../static/img/square.png'></img></div>
-        <div style='position: absolute; bottom: 0;  left: 0; '><img src='../static/img/square.png'></img></div>
-        <div style='position: absolute; bottom: 0;  right: 0;'><img src='../static/img/square.png'></img></div>
-    </div>
-`,
-// <svg style='width: 40px; top: 0; left: 0;position: absolute;'viewBox="11.8 9 16 22" class="mouse"><path d="M20,21l4.5,8l-3.4,2l-4.6-8.1L12,29V9l16,12H20z"></path></svg>
-// <script src="animate_mouse.js"></script> 
+        <p>This experiment aims to measure humans' visual reasoning skills. You will go through a practice session consisting of 3 trials, followed by 6 blocks of 21 trials.</p>
+        
+        <p>When presented with a square with a cross in the middle of the screen, place your cursor on it to start the trial.</p>
 
-post_trial_gap: 2000
+        <p>Press any button to continue</p>
+        <div style="font-size:60px; border: 5px solid black; width: 60px; height: 60px; margin: 0 auto; text-align: center; display: flex; justify-content: center; align-items: center;"> + </div>
+    `,
+    // post_trial_gap: 1000
 };
 
-timeline.push(instructions);
+var instructions_2 = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+        <p>4 images will appear on the screen. 3 out of 4 images were generated with a certain rule while one image (the odd one out) does not respect this rule.</p>
+        <p>Select the odd one out by clicking on the image.</p>
+            
+        <p>Press any button to continue</p>
+        <div style='margin: auto; position: relative; width: 400px; height: 400px;'>
+            <div style='position: absolute; top: 0;     left: 0; width: 30%; height: 30%;'><img style='width: 100%; height: 100%;' src='../static/human_exp_images/practice_img/00_0.png'></img></div>
+            <div style='position: absolute; top: 0;     right: 0;width: 30%; height: 30%;'><img style='width: 100%; height: 100%;' src='../static/human_exp_images/practice_img/00_1.png'></img></div>
+            <div style='position: absolute; bottom: 0;  left: 0; width: 30%; height: 30%;'><img style='width: 100%; height: 100%;' src='../static/human_exp_images/practice_img/00_2.png'></img></div>
+            <div style='position: absolute; bottom: 0;  right: 0;width: 30%; height: 30%;'><img style='width: 100%; height: 100%; border: 4px solid green;' src='../static/human_exp_images/practice_img/00_3.png'></img></div>
+        </div>
+    `,
+    // post_trial_gap: 2000
+};
+
+var instructions_3 = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+        <p>Following your choice, you will be asked to rate how confident you were about your choice on a scale from 0 to 100. Then, you will receive feedback on the trial.</p>
+        
+        <p>The 21 trials of a block use the same rule and each block uses a different rule. At the end of each block, you will asked to describe the rule before starting a new block.</p>
+        <p>Please do not take breaks only in between blocks not in between trials.</p>
+        <p>The following 3 trials will allow you to get familiar with the odd-one-out task. The experiment starts after this practice session.</p>
+        
+        <p>Press any button to continue</p>
+        <div style='margin: auto; position: relative; width: 400px; height: 400px;'>
+        <input type="range" class="jspsych-slider" value="50" min="0" max="100" step="1" id="jspsych-html-slider-response-response"></input>
+        <div style="border: 1px solid transparent; display: inline-block; position: absolute; left:-50%; text-align: center; width:100%;">
+            <span style="text-align: center; font-size: 80%;">0</span> 
+        </div>
+        <div style="border: 1px solid transparent; display: inline-block; position: absolute; left:50%; text-align: center; width:100%;">
+            <span style="text-align: center; font-size: 80%;">100</span> 
+        </div>
+        </div>
+        
+        `,
+    // post_trial_gap: 2000
+};
+
+var instructions_4 = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+        <p>The 21 trials of a block use the same rule and each block uses a different rule. At the end of each block, you will asked to describe the rule before starting a new block.</p>
+
+        <p><b>This experiment requires the use of a mouse or a trackpad!</b> We ask you to please do not use the <b>BACK</b> or <b>REFRESH</b> buttons as they will terminate the experiment.</p>
+        <p>We encourage taking brief pauses before the start or at the end of a each block. However, we urge you to avoid taking pauses during a block.</p>
+        
+        <p>The following 3 trials will allow you to get familiar with the odd-one-out task. The experiment starts after this practice session.</p>
+        
+        <p>Press any button to continue</p>
+        `,
+    // post_trial_gap: 2000
+};
+
+
+timeline.push(instructions_1);
+timeline.push(instructions_2);
+timeline.push(instructions_3);
+timeline.push(instructions_4);
 
 var instruction_check = {
     type: jsPsychSurveyMultiSelect,
@@ -240,9 +279,9 @@ var instruction_check = {
             prompt: "Select the correct answers. In this experiment:", 
             name: 'Instruction Check', 
             options: [
-                    'No mouse or trackpad are needed.', 
-                    'The practice session contains as many trials as the other blocks.', 
-                    'There are 6 blocks of 21 trials.', 
+                    "No mouse or trackpad are needed.", 
+                    "The practice session contains as many trials as the other blocks.", 
+                    "There are 6 blocks of 21 trials.", 
                     "It's ok to take breaks within a block.", 
                     "The tasks consists of choosing one image that's different from the other three.",
                     "It's possible to reload the page in between trials."
@@ -252,10 +291,82 @@ var instruction_check = {
     ],
   };
 
-
 timeline.push(instruction_check);
 
-  
+var instruction_error = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+    <h1> Please read the instructions carefully!</h1>
+    
+        <p>This experiment aims to measure humans' visual reasoning skills. You will go through a practice session consisting of 3 trials, followed by 6 blocks of 21 trials.</p>
+        
+        <p>When presented with a square with a cross in the middle of the screen, place your cursor on it to start the trial.</p>
+        <p>4 images will appear on the screen. 3 out of 4 images were generated with a certain rule while one image (the odd one out) does not respect this rule.</p>
+        <p>Select the odd one out by clicking on the image.</p>
+        <p>Following your choice, you will be asked to rate how confident you were about your choice on a scale from 0 to 100. Then, you will receive feedback on the trial.</p>
+        
+        <p>The 21 trials of a block use the same rule and each block uses a different rule. At the end of each block, you will asked to describe the rule before starting a new block.</p>
+        
+        <p><b>This experiment requires the use of a mouse or a trackpad!</b> We ask you to please do not use the <b>BACK</b> or <b>REFRESH</b> buttons as they will terminate the experiment.</p>
+        <p>We encourage taking brief pauses before the start/the end of a each block. However, we urge you to avoid taking pauses during a block.</p>
+
+        <p>The following 3 trials will allow you to get familiar with the odd-one-out task. The experiment starts after this practice session.</p>
+        
+        <p>Press any button to continue</p>
+        
+    `,
+    // post_trial_gap: 2000
+};
+// timeline.push(instruction_error);
+
+
+var while_node = {
+    timeline: [instruction_error, instruction_check],
+    loop_function: function(data){
+        var idx_loop = jsPsych.data.get().select('trial_type').subset(function(x){ return x == "survey-multi-select"; }).count();
+
+        var data = jsPsych.data.get().last(1).values()[0].response['Instruction Check'];
+        var correct_responses=[
+            "There are 6 blocks of 21 trials.", 
+            "The tasks consists of choosing one image that's different from the other three."
+        ]
+        var filteredArray = data.filter(function(n) {
+            return correct_responses.indexOf(n) !== -1;
+        });
+        
+        if( (idx_loop >= 5) || (data.length == 2 && filteredArray.length == 2)){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+// timeline.push(while_node);
+
+
+
+var if_node = {
+    timeline: [while_node],
+    conditional_function: function(){
+        var data = jsPsych.data.get().last(1).values()[0].response['Instruction Check'];
+        var correct_responses=[
+            "There are 6 blocks of 21 trials.", 
+            "The tasks consists of choosing one image that's different from the other three."
+        ]
+        var filteredArray = data.filter(function(n) {
+            return correct_responses.indexOf(n) !== -1;
+        });
+        
+        if(data.length == 2 && filteredArray.length == 2){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+timeline.push(if_node);
+
+
 var experiment_start = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: `<p style='font-size: 40px'>The practice session is over. The experiment begin now!</p> 
@@ -271,8 +382,9 @@ var new_rule = {
 var fixation = {
     // type: jsPsychHtmlKeyboardResponse,
     type: jsImageHover,
-    // stimulus: '<div style="font-size:60px;">+</div>',
-    stimulus: `<img style="max-width: 100%; max-height: 100%;" src='../static/img/square.png'></img>`,
+    // stimulus: '<div style=" width: 50%; height: 50%; position: absolute; top: 25%; left: 25%;"><div style="font-size:60px; border: 5px solid black; width: 100%; height: 100%; position: absolute; top: 0%; left: 0%; text-align: center; display: flex; justify-content: center; align-items: center;">+</div></div>',
+    stimulus: '<div style="font-size:60px; border: 6px solid black;  width: 100%; height: 100%; position: absolute; top: calc(0% - 6px); left: calc(0% - 6px); text-align: center; display: flex; justify-content: center; align-items: center;">+</div>',
+    // stimulus: `<img style="max-width: 100%; max-height: 100%;" src='../static/img/square.png'></img>`,
 };
 
 var multiple_choice = {
@@ -281,6 +393,7 @@ var multiple_choice = {
     data: {
         all_choices: jsPsych.timelineVariable('stimulus'),
         task: 'response',
+        document_dims: function(){return [document.body.clientWidth, document.body.clientHeight]},
         correct_response: jsPsych.timelineVariable('correct_response'),
         shuffled_array: jsPsych.timelineVariable('shuffled_array'),
         catch_trial: jsPsych.timelineVariable('catch_trial'),
@@ -288,10 +401,11 @@ var multiple_choice = {
     extensions: [
         {type: jsPsychExtensionMouseTracking, params: {}} //targets: ['#target']
     ],
+    // on_start: function(data){
+    //     data.document_dims = [document.body.clientWidth, document.body.clientHeight]
+    // },
     on_finish: function(data){
         data.correct = data.response == data.correct_response;
-        // discard_experiment("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_reject}}")
-
     }
 };
 
@@ -317,9 +431,11 @@ var feedback = {
         
         var last_trial_data = jsPsych.data.get().last(2).values()[0];
         if(last_trial_data.correct){
-            fb = "<h1 style='font-size: 60px; color: green;'>Correct!</h1>";
+            // fb = "<h1 style='font-size: 60px; color: green;'>Correct!</h1>";
+            fb = "<h1 style='font-size: 60px; color: green;'>Correct!</h1> <p>Press any key to continue.</p>";
         } else {
-            fb = "<h1 style='font-size: 60px; color: red'>Wrong</h1>";
+            // fb = "<h1 style='font-size: 60px; color: red'>Wrong</h1>";
+            fb = "<h1 style='font-size: 60px; color: red'>Wrong</h1> <p>Press any key to continue.</p>";
         }
         
         extra_class = []
@@ -348,9 +464,15 @@ var feedback = {
         
     },
 
-    choices: "NO_KEYS",
+    // choices: "NO_KEYS",
     // trial_duration: 2500,
-    trial_duration: function(){if(jsPsych.data.get().last(2).values()[0].correct){return 1500} else {return 2500}},    
+    // trial_duration: function(){if(jsPsych.data.get().last(2).values()[0].correct){return 1500} else {return 2500}},
+
+    on_finish: function() {
+        var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
+        jsPsych.setProgressBar( curr_progress_bar_value + (1/n_all_trials) );
+    }
+
 };
 
 var task_description = {
@@ -364,6 +486,7 @@ var task_description = {
 var preload = {
     type: jsPsychPreload,
     images: preload_practice
+
 };
 
 var practice_block = {
@@ -385,7 +508,11 @@ for (let i = 0; i < tasks.length; i++) {
     
     var preload = {
         type: jsPsychPreload,
-        images: all_preload_images[i]
+        images: all_preload_images[i],
+        // on_start: function() {
+        //     // set progress bar to 0 at the start of experiment
+        //     jsPsych.setProgressBar(0);
+        // }
     };
     
     var block_end = {
@@ -397,6 +524,7 @@ for (let i = 0; i < tasks.length; i++) {
             save_block(jsPsych.data.get().last(1 + 4 * all_test_stimuli[i].length).json());
             console.log('saved block');
         },
+        
     };
     
     /* define test procedure */
