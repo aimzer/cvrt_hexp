@@ -192,94 +192,13 @@ COMP_TO_ELEM = {
 
 elem_comp = {'{}-{}'.format(*v):k for k,v in COMP_TO_ELEM.items()}
 
-# do not put [0,x] where [5, x] or [4, x] are the first relation
-# change flip and rotation tasks to use only flips and rotations but not shape
+#### fix after discussion with thomas and julien
 trials = [
-    [[0, 1], [0, 8], [1, 2], [3, 4], [3, 4, 5, 6, 7]], 
-    [[0, 2], [0, 1], [2, 8], [5, 6], [3, 4, 5, 6, 7]], 
-    [[0, 3], [0, 2], [1, 3], [5, 7], [4, 5, 6, 7, 8]], 
-    [[0, 4], [0, 3], [4, 8], [1, 5], [1, 2, 5, 6, 7]], 
-    [[0, 5], [0, 4], [1, 5], [7, 8], [2, 3, 6, 7, 8]], 
-    [[0, 6], [0, 5], [6, 8], [4, 7], [1, 2, 3, 4, 7]], 
-    [[0, 7], [0, 6], [1, 7], [2, 3], [2, 3, 4, 5, 8]], 
-    [[0, 8], [0, 7], [2, 8], [1, 6], [1, 3, 4, 5, 6]], 
-    [[1, 2], [0, 1], [2, 5], [3, 7], [3, 4, 6, 7, 8]], 
-    [[1, 3], [1, 4], [2, 3], [6, 7], [0, 5, 6, 7, 8]], 
-    [[1, 4], [1, 5], [0, 4], [3, 8], [2, 3, 6, 7, 8]], 
-    [[1, 5], [1, 6], [0, 5], [4, 8], [2, 3, 4, 7, 8]], 
-    [[1, 6], [1, 7], [0, 6], [4, 5], [2, 3, 4, 5, 8]], 
-    [[1, 7], [1, 8], [2, 7], [0, 3], [0, 3, 4, 5, 6]],  
-    [[1, 8], [1, 2], [0, 8], [4, 6], [3, 4, 5, 6, 7]], 
-    [[2, 3], [0, 2], [3, 4], [1, 7], [1, 5, 6, 7, 8]], 
-    [[2, 4], [2, 3], [1, 4], [0, 6], [0, 5, 6, 7, 8]],  
-    [[2, 5], [2, 4], [3, 5], [0, 1], [0, 1, 6, 7, 8]], 
-    [[2, 6], [2, 5], [1, 6], [0, 4], [0, 3, 4, 7, 8]], 
-    [[2, 7], [2, 6], [3, 7], [0, 5], [0, 1, 4, 5, 8]], 
-    [[2, 8], [2, 7], [1, 8], [3, 6], [0, 3, 4, 5, 6]], 
-    [[3, 4], [3, 5], [2, 4], [6, 8], [0, 1, 6, 7, 8]], 
-    [[3, 5], [1, 3], [4, 5], [0, 7], [0, 2, 6, 7, 8]], 
-    [[3, 6], [3, 7], [2, 6], [0, 8], [0, 1, 4, 5, 8]], 
-    [[3, 7], [0, 3], [4, 7], [5, 8], [1, 2, 5, 6, 8]], 
-    [[3, 8], [3, 4], [7, 8], [2, 5], [0, 1, 2, 5, 6]],  
-    [[4, 5], [4, 8], [5, 6], [2, 7], [0, 1, 2, 3, 7]], 
-    [[4, 6], [4, 5], [3, 6], [2, 8], [0, 1, 2, 7, 8]], 
-    [[4, 7], [4, 6], [5, 7], [1, 8], [0, 1, 2, 3, 8]], 
-    [[4, 8], [4, 7], [3, 8], [2, 6], [0, 1, 2, 5, 6]], 
-    [[5, 6], [5, 7], [4, 6], [1, 3], [0, 1, 2, 3, 8]], 
-    [[5, 7], [5, 8], [6, 7], [1, 4], [0, 1, 2, 3, 4]], 
-    [[5, 8], [5, 6], [3, 8], [2, 4], [0, 1, 2, 4, 7]], 
-    [[6, 7], [3, 6], [7, 8], [1, 2], [0, 1, 2, 4, 5]], 
-    [[6, 8], [6, 7], [5, 8], [0, 2], [0, 1, 2, 3, 4]], 
-    [[7, 8], [0, 7], [6, 8], [3, 5], [1, 2, 3, 4, 5]],
+    [[1, 2], [0, 3]], # pos_size vs shape_color
+    [[0, 3], [1, 2]], 
 ]
-
-
-trials_pilot = [ # similar to the original setup
-    [[0, 1], [0, 8], [1, 2], [3, 4], [3, 4, 5, 6, 7]], 
-    [[4, 7], [4, 6], [5, 7], [1, 8], [0, 1, 2, 3, 8]], 
-    [[3, 5], [1, 3], [4, 5], [2, 8], [0, 2, 6, 7, 8]], 
-    [[0, 5], [0, 4], [2, 5], [7, 8], [2, 3, 6, 7, 8]], 
-    [[0, 3], [0, 2], [1, 4], [6, 7], [4, 5, 6, 7, 8]],
-    [[1, 6], [1, 7], [0, 6], [5, 8], [2, 3, 4, 5, 8]], 
-    [[2, 4], [2, 3], [4, 8], [5, 6], [0, 5, 6, 7, 8]],  
-    [[6, 8], [2, 6], [3, 8], [0, 7], [0, 1, 2, 3, 4]], 
-    [[3, 7], [3, 6], [2, 7], [1, 5], [0, 1, 4, 5, 8]], 
-]
-
-
-trials_pilot = [ # no elementary task repeats
-    [[1, 2], [3, 4], [5, 6], [7, 8]],
-    [[0, 2], [3, 8], [4, 5], [6, 7]],
-    [[0, 3], [1, 8], [4, 6], [5, 7]],
-    [[0, 5], [1, 6], [2, 7], [4, 8]],
-    [[0, 7], [2, 8], [3, 6], [1, 5]],
-    [[0, 1], [2, 3], [4, 7], [6, 8]],
-    [[0, 8], [1, 7], [2, 4], [3, 5]], 
-    [[0, 4], [1, 3], [5, 8], [2, 6]],
-    [[0, 6], [3, 7], [2, 5], [1, 4]],
-]
-
-trials_pilot = [ # no elementary task repeats + shuffled
-    [[7, 8], [5, 6], [1, 2], [3, 4]], 
-    [[3, 8], [6, 7], [4, 5], [0, 2]], 
-    [[4, 6], [1, 8], [0, 3], [5, 7]], 
-    [[2, 7], [1, 6], [0, 5], [4, 8]], 
-    [[1, 5], [3, 6], [2, 8], [0, 7]], 
-    [[4, 7], [0, 1], [6, 8], [2, 3]], 
-    [[2, 4], [1, 7], [0, 8], [3, 5]], 
-    [[1, 3], [5, 8], [2, 6], [0, 4]], 
-    [[3, 7], [0, 6], [1, 4], [2, 5]]
-]
-
-# [1, 2] | [3, 4] | [5, 6] | [7, 8]
-# [0, 2] | [3, 8] | [4, 5] | [6, 7]
-# [0, 3] | [1, 8] | [4, 6] | [5, 7]
-# [0, 5] | [1, 6] | [2, 7] | [4, 8]
-# [0, 7] | [2, 8] | [3, 6] | [1, 5]
-# [0, 1] | [2, 3] | [4, 7] | [6, 8]
-# [0, 8] | [1, 7] | [2, 4] | [3, 5] 
-# [0, 4] | [1, 3] | [5, 8] | [2, 6]
-# [0, 6] | [3, 7] | [2, 5] | [1, 4]
+    # [[2, 6], [0, 3]], # size_count vs shape_color
+    # [[0, 3], [2, 6]], 
 
 
 conv_elem = {i:i for i in range(9)}
@@ -293,110 +212,69 @@ for i in range(len(trials)):
     
     trials_[i]['test_ab'] = elem_comp['{}-{}'.format(conv_elem[a], conv_elem[b])]
 
-    a,c = trials[i][1]
-    trials_[i]['test_ac'] = elem_comp['{}-{}'.format(conv_elem[a], conv_elem[c])]
-
-    b,d = trials[i][2]
-    trials_[i]['test_bd'] = elem_comp['{}-{}'.format(conv_elem[b], conv_elem[d])]
-
-    e,f = trials[i][3]
-    trials_[i]['test_ef'] = elem_comp['{}-{}'.format(conv_elem[e], conv_elem[f])]
+    e,f = trials[i][1]
+    trials_[i]['test_cd'] = elem_comp['{}-{}'.format(conv_elem[e], conv_elem[f])]
 
 trial_combinations = trials_
 
-seq_elements = ['test_ab', 'test_ac', 'test_bd', 'test_ef']
+# seq_elements = ['test_ab', 'test_ac', 'test_bd', 'test_ef']
+seq_elements = ['test_ab', 'test_cd']
 
 trial_sequence =[
-    [0, 1, 2, 3],
-    [0, 1, 3, 2],
-    [0, 3, 1, 2],
-    [3, 1, 2, 0],
-    [3, 1, 0, 2],
-    [3, 0, 1, 2],
-    [1, 3, 2, 0],
-    [1, 3, 0, 2],
-    [1, 0, 3, 2],
-    [1, 0, 2, 3],
+    [0, 0, 1], # 0, 
+    [0, 1, 0], # 0, 
+    [1, 0, 1], # 1, 
+    [1, 1, 0], # 1, 
 ]
+# 
 
-
-trials_pilote_ = {}
-for i in range(len(trials_pilot)):
-    a,b = trials_pilot[i][0]
-
-    trials_pilote_[i] = {'train': [conv_elem[a], conv_elem[b]]}
+def prepare_experiment(p_idx, pilote=False, elem=True):
+    # if pilote:
+    #     if p_idx in pilote_idx_cond_fix:
+    #         return prepare_experiment_pilote_fix(p_idx, elem)
+    #     else:
+    #         return prepare_experiment_pilote(p_idx, elem)
+    # else:
+    #     return prepare_experiment_main(p_idx)
     
-    trials_pilote_[i]['test_ab'] = elem_comp['{}-{}'.format(conv_elem[a], conv_elem[b])]
-
-    a,c = trials_pilot[i][1]
-    trials_pilote_[i]['test_ac'] = elem_comp['{}-{}'.format(conv_elem[a], conv_elem[c])]
-
-    b,d = trials_pilot[i][2]
-    trials_pilote_[i]['test_bd'] = elem_comp['{}-{}'.format(conv_elem[b], conv_elem[d])]
-
-    e,f = trials_pilot[i][3]
-    trials_pilote_[i]['test_ef'] = elem_comp['{}-{}'.format(conv_elem[e], conv_elem[f])]
-
-trial_pilote_combinations = trials_pilote_
-
-
-seq_elements_pilote = ['test_ab', 'test_ac', 'test_bd', 'test_ef']
-
-trial_sequence_pilote =[
-    [0, 1, 2, 3],
-    [3, 2, 1, 0],
-    [1, 0, 3, 2],
-    [1, 3, 0, 1],
-]
-
-
-# print(len(trial_combinations))
-
-def prepare_experiment(p_idx, pilote=False, elem=False):
-
-    if pilote:
-        return prepare_experiment_pilote(p_idx, elem)
-    else:
-        return prepare_experiment_main(p_idx)
+    return prepare_experiment_main(p_idx)
 
 def prepare_experiment_main(p_idx):
 
     # if p_idx > N_CONDITIONS:
     #     p_idx = p_idx % N_CONDITIONS
     
-    n_trials = 20
+    # ---------------------------------------------------------------------------------------------------------------------------- don't forget to change this 
+    n_trials = [10, 10, 20, 20]
 
     trial_combs = copy.deepcopy(trial_combinations)
     trial_seq_idx = p_idx // len(trial_combs)
     trial_idx = p_idx % len(trial_combs)
-    trial_seq = [seq_elements[i] for i in trial_sequence[trial_seq_idx]]
+    trial_seq_idx_all = trial_sequence[trial_seq_idx][1:]
+    p_ab = trial_sequence[trial_seq_idx][0]
+    trial_seq = [seq_elements[i] for i in trial_sequence[trial_seq_idx][1:]]
     trial = trial_combs[trial_idx]
     
+    # print(trial)
+
     tasks = trial['train']
-    tasks += [trial[trial_seq[0]], trial[trial_seq[1]], trial[trial_seq[2]], trial[trial_seq[3]]]
+    task_perm = [0, 1]
+    task_perm_name = ['a', 'b']
+    if p_ab == 1:
+        tasks = [tasks[1], tasks[0]]
+        task_perm = [1, 0]
+        task_perm_name = ['b', 'a']
+    
+    # a_ = ['ab', 'ac', 'bd', 'ef']
+    a_ = ['ab', 'cd']
+    task_perm_name += [a_[ts] for ts in trial_seq_idx_all]
+    task_perm += [ts+2 for ts in trial_seq_idx_all]
+    tasks += [trial[trial_seq[0]], trial[trial_seq[1]]]
     
     tasks_names = [TASKS_NAMES[t] for t in tasks]
     
-    return trial_idx, trial_seq_idx, tasks_names, n_trials
+    return trial_idx, trial_seq_idx, task_perm, task_perm_name, tasks, tasks_names, n_trials
 
-def prepare_experiment_pilote(p_idx, elem=False):
-
-    # if p_idx > N_CONDITIONS_PILOTE:
-    #     p_idx = p_idx % N_CONDITIONS_PILOTE
-
-    n_trials = 20
-    trial_combs = copy.deepcopy(trial_pilote_combinations)
-    trial_seq_idx = p_idx // len(trial_combs)
-    trial_idx = p_idx % len(trial_combs)
-    trial_seq = [seq_elements_pilote[i] for i in trial_sequence_pilote[trial_seq_idx]]
-    trial = trial_combs[trial_idx]
-    
-    tasks = trial['train'] if elem else []
-    tasks += [trial[trial_seq[0]], trial[trial_seq[1]], trial[trial_seq[2]], trial[trial_seq[3]]]
-    
-    tasks_names = [TASKS_NAMES[t] for t in tasks]
-    
-    return trial_idx, trial_seq_idx, tasks_names, n_trials
 
 # how to avoid interference between trials ? 
 # experiments are registered with workerID
@@ -407,13 +285,15 @@ def prepare_experiment_pilote(p_idx, elem=False):
 def unqueue_experiment(exp_db, pilote=False):
     all_sessions = os.listdir(exp_db)
     all_conditions = [int(l.split('_')[0]) for l in all_sessions]
-    # condition = np.zeros(N_CONDITIONS)
-    if pilote:
-        condition_counts = [0]*(N_CONDITIONS_PILOTE)
-        # n_unique_conditions = len(trial_pilote_combinations)
-    else:
-        condition_counts = [0]*(N_CONDITIONS)
-        # n_unique_conditions = len(trial_combinations)
+    # # condition = np.zeros(N_CONDITIONS)
+    # if pilote:
+    #     condition_counts = [0]*(N_CONDITIONS_PILOTE)
+    #     # n_unique_conditions = len(trial_pilote_combinations)
+    # else:
+    #     condition_counts = [0]*(N_CONDITIONS)
+    #     # n_unique_conditions = len(trial_combinations)
+  
+    condition_counts = [0]*(N_CONDITIONS)
     
 
     for c in all_conditions:
@@ -425,23 +305,26 @@ def unqueue_experiment(exp_db, pilote=False):
 
 
 N_CONDITIONS = len(trial_combinations) * len(trial_sequence)
-N_CONDITIONS_PILOTE = len(trial_pilote_combinations) * len(trial_sequence_pilote)
+# N_CONDITIONS_PILOTE = len(trial_pilote_combinations) * len(trial_sequence_pilote)
 
 
-def test_unqueue():
-    print(N_CONDITIONS_PILOTE)
-    exp_db = '../user_data/exp_db_p'
-    for pilote in [False, True]:
-        for _ in range(600):
-            exp_idx, j = unqueue_experiment(exp_db, pilote=pilote)
-            trial_idx, trial_seq_idx, tasks_names, n_trials = prepare_experiment(exp_idx, pilote=pilote, elem=True)
-            print(exp_idx, j, trial_idx, trial_seq_idx, tasks_names, n_trials)
-            with open(exp_db + '/{}_{}'.format(exp_idx, j), 'w') as f:
-                f.write('x')
-            # exp_idx, i
+# def test_unqueue():
+#     # print(N_CONDITIONS_PILOTE)
+#     print(N_CONDITIONS)
+#     exp_db = '../user_data/exp_db_p'
+#     # for pilote in [False, True]:
+#     for pilote in [True]:
+#         for _ in range(36):
+#             exp_idx, j = unqueue_experiment(exp_db, pilote=pilote)
+#             trial_idx, trial_seq_idx, task_perm, task_perm_name, tasks, tasks_names, n_trials = prepare_experiment(exp_idx, pilote=pilote, elem=True)
+#             print(exp_idx, j, trial_idx, trial_seq_idx, task_perm, task_perm_name, tasks, tasks_names, n_trials)
+#             with open(exp_db + '/{}_{}'.format(exp_idx, j), 'w') as f:
+#                 f.write('x')
+#             # exp_idx, i
 
 # test_unqueue()
 
 # import json
 # with open("/home/aimen/projects/nivturk/services/web/user_data/data_p/qbrgjkxu59n2uv3ntcrzon0s_0.json", 'r') as f:
 #     d = json.load(f)
+

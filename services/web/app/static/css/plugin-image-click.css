@@ -26,3 +26,7 @@
     width: 35%;
     height: 35%;
 }
+
+button.jspsych-survey-multi-select{
+    margin-bottom: 50px;
+}

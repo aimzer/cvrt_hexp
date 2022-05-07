@@ -38,7 +38,8 @@
   <script type="text/javascript">
     var baseFolder = '../static/human_exp_images/';
     // var practiceFolder = '../static/practice_img/';
-    var n_trials = {{ n_trials }};
+    // var n_trials = {{ n_trials }};
+    var n_trials = {{ n_trials|tojson }};
 
     var tasks = {{ tasks_names|tojson }};
     var n_tasks = tasks.length;

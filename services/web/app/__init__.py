@@ -14,6 +14,7 @@ cfg.read(os.path.join(APP_DIR, 'app.ini'))
 
 ROOT_DIR = os.getenv('APP_HOME')
 
+
 print(ROOT_DIR)
 ## Ensure output directories exist.
 data_dir = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
@@ -63,8 +64,10 @@ app = Flask(__name__)
 
 app.secret_key = secret_key
 
-## uncomment when debugging js
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+if debug:
+    ## uncomment when debugging js
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
 
 ## Apply blueprints to the application.
 app.register_blueprint(consent.bp)
@@ -72,12 +75,6 @@ app.register_blueprint(alert.bp)
 app.register_blueprint(experiment.bp)
 app.register_blueprint(complete.bp)
 app.register_blueprint(error.bp)
-
-
-# def worker_found(worker_id, meta_dir):
-#     session_list = os.listdir(meta_dir)
-#     worker_list = [l.split('_')[1] for l in session_list]
-#     return worker_id in worker_list
 
 
 
@@ -116,6 +113,8 @@ def index():
         code_reject  = cfg['PROLIFIC'].get('CODE_REJECT', gen_code(8).upper()),
     )
 
+    # session['complete'] = None
+    
     if info['workerId'] is None:
         if worker_type_test:
             info['workerId'] = 'test_' + gen_code(10)
@@ -136,21 +135,19 @@ def index():
         session['metadata'] = meta_dir
         session['reject'] = reject_dir
         session['exp_db'] = exp_db_dir
-
+    
     session['experiment_debug'] = experiment_debug
 
     session['pilote'] = pilote
 
     ## Case 1: workerId absent.
     if info['workerId'] is None:
-        print('case 1')
 
         ## Redirect participant to error (missing workerId).
         return redirect(url_for('error.error', errornum=1000))
 
     ## Case 2: mobile user.
     elif info['platform'] in ['android','iphone','ipad','wii']:
-        print('case 2')
 
         ## Redirect participant to error (platform error).
         return redirect(url_for('error.error', errornum=1001))
@@ -159,7 +156,6 @@ def index():
     elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
     # elif not 'workerId' in session and worker_found(info['workerId'], meta_dir):
 
-        print('case 3')
         ## Consult log file.
         with open(os.path.join(session['metadata'], info['workerId']),'r') as f:
             logs = f.read()
@@ -192,7 +188,6 @@ def index():
 
     ## Case 4: repeat visit, manually changed workerId.
     elif 'workerId' in session and session['workerId'] != info['workerId']:
-        print('case 4')
 
         ## Update metadata.
         session['ERROR'] = '1005: workerId tampering detected.'
@@ -204,7 +199,6 @@ def index():
 
     ## Case 5: repeat visit, previously completed experiment.
     elif 'complete' in session:
-        print('case 5')
 
         ## Update metadata.
         session['WARNING'] = "Revisited home."
@@ -215,7 +209,6 @@ def index():
 
     ## Case 6: repeat visit, preexisting activity.
     elif 'workerId' in session:
-        print('case 6')
 
         ## Update metadata.
         session['WARNING'] = "Revisited home."
@@ -229,7 +222,6 @@ def index():
 
     ## Case 7: first visit, workerId present.
     else:
-        print('case 7')
         ## Update metadata.
         
         for k, v in info.items(): session[k] = v

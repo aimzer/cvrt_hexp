@@ -44,6 +44,22 @@ function discard_experiment(workerId, assignmentId, hitId, code_reject) {
   });
 }
 
+function comp_check_return(workerId, assignmentId, hitId, code_reject) {
+
+  $.ajax({
+    url: "/discard_experiment",
+    method: 'POST',
+    data: JSON.stringify(jsPsych.data.get().json()),
+    contentType: "application/json; charset=utf-8",
+  }).done(function(data, textStatus, jqXHR) {
+    // do nothing on success
+    window.location.replace("/error/1006");    
+  }).fail(function(error) {
+    console.log(error);
+  });
+}
+
+
 
 // Successful completion of experiment: redirect with completion code.
 function redirect_success(workerId, assignmentId, hitId, code_success) {
@@ -81,7 +97,7 @@ function redirect_success(workerId, assignmentId, hitId, code_success) {
 function redirect_reject(workerId, assignmentId, hitId, code_reject) {
 
   // Concatenate metadata into complete URL (returned on reject).
-  var url = "https://app.prolific.co/submissions/complete?cc=" + code_reject;
+  // var url = "https://app.prolific.co/submissions/complete?cc=" + code_reject;
 
   $.ajax({
     url: "/redirect_reject",
@@ -89,7 +105,8 @@ function redirect_reject(workerId, assignmentId, hitId, code_reject) {
     data: JSON.stringify(jsPsych.data.get().json()),
     contentType: "application/json; charset=utf-8",
   }).done(function(data, textStatus, jqXHR) {
-    window.location.replace(url);
+    window.location.replace("/complete");
+    // window.location.replace(url);
   }).fail(function(error) {
     console.log(error);
   });
@@ -107,7 +124,8 @@ function redirect_error(error) {
     data: JSON.stringify(jsPsych.data.get().json()),
     contentType: "application/json; charset=utf-8",
   }).done(function(data, textStatus, jqXHR) {
-    window.location.replace(url);
+    window.location.replace("/complete");
+    // window.location.replace(url);
   }).fail(function(error) {
     console.log(error);
   });

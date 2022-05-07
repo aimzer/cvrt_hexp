@@ -49,23 +49,29 @@ def experiment():
         ## Update participant metadata.
         session['experiment'] = True
         
+        # print(session['exp_db'])
         exp_idx, count = unqueue_experiment(session['exp_db'], pilote=session['pilote'])
         session['exp_idx'] = exp_idx
         session['exp_count'] = count
 
-        trial_idx, trial_seq_idx, tasks_names, n_trials = prepare_experiment(session['exp_idx'], pilote=session['pilote'])
+        trial_idx, trial_seq_idx, task_perm, task_perm_names, tasks, tasks_names, n_trials = prepare_experiment(session['exp_idx'], pilote=session['pilote'])
 
         session['trial_idx'] = trial_idx
         session['trial_seq_idx'] = trial_seq_idx
 
-        ## write resolve exeriment data
-        write_metadata(session, ['experiment', 'exp_idx', 'trial_idx', 'trial_seq_idx'], 'a')
+        session['task_perm'] = ' '.join([str(s) for s in task_perm])
+        session['task_perm_names'] = ' '.join(task_perm_names)
+        session['task_idx'] = ' '.join([str(s) for s in tasks])
+        session['task_names'] = ' '.join(tasks_names)
 
-        write_exp_db(session, ['workerId', 'exp_idx', 'exp_count'], 'w')
+        ## write resolve exeriment data
+        write_metadata(session, ['experiment', 'exp_idx', 'trial_idx', 'trial_seq_idx', 'task_perm', 'task_perm_names', 'task_idx', 'task_names'], 'a')
+
+        write_exp_db(session, ['workerId', 'exp_idx', 'exp_count', 'task_perm', 'task_perm_names', 'task_idx', 'task_names'], 'w')
 
         if session['experiment_debug']:
             # tasks_names = tasks_names[0:1]
-            n_trials = 3
+            n_trials = [1 for n in n_trials]
 
         content = {
             "workerId": session['workerId'], 

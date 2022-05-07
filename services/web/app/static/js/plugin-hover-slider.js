@@ -169,7 +169,7 @@ var jsPsychHtmlHoverSlider = (function (jspsych) {
                 
                 const min = trial.min ? trial.min : 0;
                 const max = trial.max ? trial.max : 100;
-                valueHover = parseInt(valueHover*(max - min)*1.08 + min - (max - min)*0.04);  
+                valueHover = parseInt(valueHover*(max - min)*1.02 + min - (max - min)*0.00);  
                 
                 this.value = valueHover;
             });

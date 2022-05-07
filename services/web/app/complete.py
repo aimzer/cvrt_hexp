@@ -36,7 +36,6 @@ def complete():
             url = "https://app.prolific.co/submissions/complete?cc=" + session['code_reject']
             return redirect(url)
 
-
     ## Case 2: visit complete page with previous rejection.
     elif session['complete'] == 'success':
 
@@ -77,3 +76,4 @@ def complete():
 
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1005))
+
